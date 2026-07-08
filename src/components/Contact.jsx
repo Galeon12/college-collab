@@ -26,7 +26,7 @@ export default function Contact() {
     setStatusType('');
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/applications', {
+      const response = await fetch('https://college-collab-er2l.onrender.com/api/applications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
