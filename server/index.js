@@ -12,7 +12,20 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: [/^http:\/\/localhost:\d+$/, /^http:\/\/127\.0\.0\.1:\d+$/], // Vite local URLs on any port
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (/^http:\/\/localhost:\d+$/.test(origin) || /^http:\/\/127\.0\.0\.1:\d+$/.test(origin)) {
+      return callback(null, true);
+    }
+    if (origin.endsWith('vercel.app')) {
+      return callback(null, true);
+    }
+    // You can add your custom domain here later
+    // if (origin === 'https://yourcustomdomain.com') return callback(null, true);
+    
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 app.use(express.json());
