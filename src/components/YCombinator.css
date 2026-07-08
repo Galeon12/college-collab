@@ -1,0 +1,170 @@
+/* ─── YCombinator / About Section ─── */
+.ycombinator {
+  padding: var(--space-4xl) 0;
+  background: var(--white);
+}
+
+.ycombinator__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3xl);
+}
+
+.ycombinator__content {
+  flex: 1;
+}
+
+.ycombinator__title {
+  margin-bottom: var(--space-lg);
+}
+
+.ycombinator__desc {
+  font-size: 17px;
+  color: var(--grey-700);
+  line-height: 1.8;
+  margin-bottom: var(--space-xl);
+}
+
+.ycombinator__highlights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.ycombinator__highlight {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--grey-50);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--crimson);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.ycombinator__highlight:hover {
+  background: var(--crimson-50);
+  transform: translateX(4px);
+}
+
+.ycombinator__highlight-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.ycombinator__highlight-text h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--grey-900);
+  margin-bottom: 4px;
+}
+
+.ycombinator__highlight-text p {
+  font-size: 14px;
+  color: var(--grey-600);
+  line-height: 1.6;
+}
+
+.ycombinator__visual {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.ycombinator__yc-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-xl);
+  background: linear-gradient(135deg, #FF6600 0%, #FF8533 100%);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 40px rgba(255, 102, 0, 0.3);
+  color: white;
+}
+
+.ycombinator__yc-badge .yc-logo {
+  width: 56px;
+  height: 56px;
+  background: white;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 28px;
+  color: #FF6600;
+  font-family: var(--font-heading);
+}
+
+.ycombinator__yc-badge .yc-text {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.ycombinator__yc-badge .yc-text span {
+  display: block;
+  font-size: 22px;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.ycombinator__partners {
+  width: 100%;
+  padding: var(--space-lg);
+  background: var(--grey-50);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--grey-200);
+}
+
+.ycombinator__partners-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--grey-600);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-align: center;
+  margin-bottom: var(--space-md);
+}
+
+.ycombinator__partner-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+}
+
+.ycombinator__partner-item {
+  padding: 10px;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--grey-700);
+  border: 1px solid var(--grey-100);
+  transition: all var(--duration-fast);
+}
+
+.ycombinator__partner-item:hover {
+  border-color: var(--crimson-200);
+  color: var(--crimson);
+  background: var(--crimson-50);
+}
+
+@media (max-width: 900px) {
+  .ycombinator__inner {
+    flex-direction: column;
+  }
+
+  .ycombinator__visual {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .ycombinator__partner-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

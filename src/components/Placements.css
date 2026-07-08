@@ -1,0 +1,264 @@
+/* ─── Placements Section ─── */
+.placements {
+  padding: var(--space-4xl) 0 var(--space-2xl);
+  background: var(--grey-50);
+}
+
+.placements__header {
+  margin-bottom: var(--space-3xl);
+}
+
+.placements__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-3xl);
+}
+
+.placements__stat-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-align: center;
+  border: 1px solid var(--grey-200);
+  transition: all var(--duration-normal) var(--ease-out);
+  box-shadow: var(--shadow-sm);
+}
+
+.placements__stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--crimson-200);
+}
+
+.placements__stat-value {
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 900;
+  color: var(--crimson);
+  margin-bottom: 4px;
+}
+
+.placements__stat-label {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--grey-600);
+  font-weight: 500;
+}
+
+/* ─── Alumni Spotlight Header Row ─── */
+.placements__alumni-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xl);
+}
+
+.placements__alumni-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--grey-900);
+}
+
+.placements__see-more {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--crimson);
+  border-bottom: 1.5px solid var(--crimson-200);
+  padding-bottom: 2px;
+  transition: all var(--duration-fast) var(--ease-out);
+  text-decoration: none;
+}
+
+.placements__see-more:hover {
+  color: var(--crimson-dark);
+  border-color: var(--crimson);
+  transform: translateX(3px);
+  display: inline-block;
+}
+
+/* ─── Alumni 4-Column Grid ─── */
+.placements__alumni-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-3xl);
+}
+
+.placements__alumni-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--grey-200);
+  overflow: hidden;
+  transition: all var(--duration-normal) var(--ease-out);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+}
+
+.placements__alumni-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--crimson-200);
+}
+
+.placements__alumni-img-wrap {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--crimson-50), var(--crimson-100));
+}
+
+.placements__alumni-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.placements__alumni-card:hover .placements__alumni-photo {
+  transform: scale(1.05);
+}
+
+.placements__alumni-details {
+  padding: var(--space-lg) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.placements__alumni-name {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--grey-900);
+}
+
+.placements__alumni-role {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--grey-600);
+  font-weight: 500;
+}
+
+.placements__alumni-company {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--crimson);
+}
+
+.placements__alumni-package-text {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--white);
+  background: var(--crimson);
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  margin-top: 4px;
+  display: inline-block;
+}
+
+/* ─── Hiring Partners Marquee ─── */
+.placements__partners {
+  padding: var(--space-2xl) 0;
+  overflow: hidden;
+  border-top: 1px solid var(--grey-200);
+}
+
+.placements__partners-title {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--grey-500);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.placements__marquee {
+  display: flex;
+  animation: marquee 25s linear infinite;
+  width: fit-content;
+}
+
+.placements__marquee:hover {
+  animation-play-state: paused;
+}
+
+.placements__partner-logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--space-4xl);
+  transition: all var(--duration-fast);
+}
+
+.placements__partner-logo-wrap:hover {
+  transform: scale(1.1);
+}
+
+.placements__partner-logo {
+  height: 48px;
+  width: auto;
+  max-width: 150px;
+  object-fit: contain;
+  transition: all var(--duration-fast);
+}
+
+@media (max-width: 1024px) {
+  .placements__alumni-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .placements__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .placements__stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+  }
+  
+  .placements__stat-card {
+    padding: var(--space-md) var(--space-sm);
+  }
+  
+  .placements__stat-value {
+    font-size: 24px;
+  }
+  
+  .placements__stat-label {
+    font-size: 12px;
+  }
+
+  .placements__alumni-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: var(--space-md);
+    padding-bottom: var(--space-md);
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .placements__alumni-grid::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .placements__alumni-card {
+    min-width: 75vw;
+    scroll-snap-align: center;
+  }
+}

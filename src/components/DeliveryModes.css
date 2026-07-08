@@ -1,0 +1,108 @@
+/* ─── Delivery Modes ─── */
+.delivery {
+  padding: var(--space-4xl) 0;
+  background: var(--grey-50);
+}
+
+.delivery__header {
+  text-align: center;
+  margin-bottom: var(--space-3xl);
+}
+
+.delivery__header .section-label {
+  justify-content: center;
+}
+
+.delivery__header .section-subtitle {
+  margin: 0 auto;
+}
+
+.delivery__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.delivery__card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-align: center;
+  border: 1px solid var(--grey-200);
+  transition: all var(--duration-normal) var(--ease-out);
+  position: relative;
+}
+
+.delivery__card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--crimson-200);
+}
+
+.delivery__card-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto var(--space-lg);
+  background: var(--crimson-50);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  transition: all var(--duration-normal);
+}
+
+.delivery__card:hover .delivery__card-icon {
+  background: var(--crimson);
+  transform: scale(1.1);
+}
+
+.delivery__card:hover .delivery__card-icon-text {
+  filter: brightness(0) invert(1);
+}
+
+.delivery__card-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--grey-900);
+  margin-bottom: var(--space-lg);
+}
+
+.delivery__features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  text-align: left;
+}
+
+.delivery__feature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 14px;
+  color: var(--grey-700);
+  line-height: 1.5;
+}
+
+.delivery__feature-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--crimson-50);
+  color: var(--crimson);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .delivery__grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}

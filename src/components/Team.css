@@ -1,0 +1,123 @@
+/* ─── Team Section ─── */
+.team {
+  padding: var(--space-4xl) 0;
+  background: var(--grey-50);
+}
+
+.team__header {
+  text-align: center;
+  margin-bottom: var(--space-3xl);
+}
+
+.team__header .section-subtitle {
+  margin: 0 auto;
+}
+
+.team__grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-lg);
+}
+
+.team__card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-align: center;
+  border: 1px solid var(--grey-200);
+  transition: all var(--duration-normal) var(--ease-out);
+  position: relative;
+  overflow: hidden;
+  width: calc(25% - var(--space-lg));
+  min-width: 240px;
+}
+
+.team__card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--crimson), var(--crimson-light));
+  opacity: 0;
+  transition: opacity var(--duration-normal);
+}
+
+.team__card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--crimson-200);
+}
+
+.team__card:hover::before {
+  opacity: 1;
+}
+
+.team__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto var(--space-md);
+  border: 3px solid var(--crimson-200);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.15);
+}
+
+.team__name {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--grey-900);
+  margin-bottom: 4px;
+}
+
+.team__role {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--crimson);
+  margin-bottom: var(--space-md);
+}
+
+.team__credential {
+  font-size: 13px;
+  color: var(--grey-600);
+  margin-bottom: 4px;
+}
+
+.team__education {
+  font-size: 13px;
+  color: var(--grey-500);
+  margin-bottom: var(--space-sm);
+}
+
+.team__expertise-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--crimson-50);
+  color: var(--crimson);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: var(--space-sm);
+}
+
+@media (max-width: 1100px) {
+  .team__card {
+    width: calc(33.333% - var(--space-lg));
+  }
+}
+
+@media (max-width: 800px) {
+  .team__card {
+    width: calc(50% - var(--space-lg));
+  }
+}
+
+@media (max-width: 600px) {
+  .team__card {
+    width: 100%;
+    max-width: 350px;
+  }
+}

@@ -1,0 +1,58 @@
+export const BRAND = {
+  name: "AlgoUniversity",
+  tagline: "Backed by Y Combinator (S21)",
+  email: "rachna@algouniversity.com",
+  phone: "+91 76750 17659",
+  address: "3rd Floor, IIT Patna Incubator, Bihta, Patna, Bihar 801103",
+};
+
+export const YC_COMPANIES = [
+  "Groww", "Stripe", "Airbnb", "Zepto", "Meesho", "Razorpay", "Twitch", "Swipe", 
+  "Coinbase", "Zapier", "Dropbox", "Reddit", "Rippling", "GitLab", "DoorDash", "Scale"
+];
+
+export const COMPANY_LOGOS = {
+  'Google': 'https://www.google.com/s2/favicons?domain=google.com&sz=128',
+  'Microsoft': 'https://www.google.com/s2/favicons?domain=microsoft.com&sz=128',
+  'Amazon': 'https://www.google.com/s2/favicons?domain=amazon.com&sz=128',
+  'Uber': 'https://www.google.com/s2/favicons?domain=uber.com&sz=128',
+  'Walmart': 'https://www.google.com/s2/favicons?domain=walmart.com&sz=128',
+  'Oracle': 'https://www.google.com/s2/favicons?domain=oracle.com&sz=128',
+  'Samsung': 'https://www.google.com/s2/favicons?domain=samsung.com&sz=128',
+  'Groww': 'https://www.google.com/s2/favicons?domain=groww.in&sz=128',
+  'Stripe': 'https://www.google.com/s2/favicons?domain=stripe.com&sz=128',
+  'Zepto': 'https://www.google.com/s2/favicons?domain=zeptonow.com&sz=128',
+  'HSBC': 'https://www.google.com/s2/favicons?domain=hsbc.com&sz=128',
+  'Honeywell': 'https://www.google.com/s2/favicons?domain=honeywell.com&sz=128',
+  'Paytm': 'https://www.google.com/s2/favicons?domain=paytm.com&sz=128',
+  'Goldman Sachs': 'https://www.google.com/s2/favicons?domain=goldmansachs.com&sz=128',
+  'Meesho': 'https://www.google.com/s2/favicons?domain=meesho.com&sz=128',
+  'Myntra': 'https://www.google.com/s2/favicons?domain=myntra.com&sz=128',
+  'ByteDance': 'https://www.google.com/s2/favicons?domain=bytedance.com&sz=128',
+  'PayPal': 'https://www.google.com/s2/favicons?domain=paypal.com&sz=128',
+  'Coinbase': 'https://www.google.com/s2/favicons?domain=coinbase.com&sz=128',
+  'Dropbox': 'https://www.google.com/s2/favicons?domain=dropbox.com&sz=128',
+  'Nvidia': 'https://www.google.com/s2/favicons?domain=nvidia.com&sz=128',
+  'Graviton': 'https://www.google.com/s2/favicons?domain=gravitonresearch.com&sz=128',
+  'Barclays': 'https://www.google.com/s2/favicons?domain=barclays.co.uk&sz=128',
+  'Rippling': 'https://www.google.com/s2/favicons?domain=rippling.com&sz=128',
+  'Adobe': 'https://www.google.com/s2/favicons?domain=adobe.com&sz=128',
+  'PhonePe': 'https://www.google.com/s2/favicons?domain=phonepe.com&sz=128',
+  'MasterCard': 'https://www.google.com/s2/favicons?domain=mastercard.us&sz=128',
+  'Intuit': 'https://www.google.com/s2/favicons?domain=intuit.com&sz=128',
+  'Apple': 'https://www.google.com/s2/favicons?domain=apple.com&sz=128',
+  'Airbnb': 'https://www.google.com/s2/favicons?domain=airbnb.com&sz=128',
+  'Razorpay': 'https://www.google.com/s2/favicons?domain=razorpay.com&sz=128',
+  'Twitch': 'https://www.google.com/s2/favicons?domain=twitch.tv&sz=128',
+  'Swipe': 'https://www.google.com/s2/favicons?domain=swipex.com&sz=128',
+  'Zapier': 'https://www.google.com/s2/favicons?domain=zapier.com&sz=128',
+  'Reddit': 'https://www.google.com/s2/favicons?domain=reddit.com&sz=128',
+  'GitLab': 'https://www.google.com/s2/favicons?domain=gitlab.com&sz=128',
+  'DoorDash': 'https://www.google.com/s2/favicons?domain=doordash.com&sz=128',
+  'Scale': 'https://www.google.com/s2/favicons?domain=scale.com&sz=128',
+  'Visa': 'https://www.google.com/s2/favicons?domain=visa.com&sz=128',
+  'Salesforce': 'https://www.google.com/s2/favicons?domain=salesforce.com&sz=128',
+  'Twilio': 'https://www.google.com/s2/favicons?domain=twilio.com&sz=128',
+  'Flipkart': 'https://www.google.com/s2/favicons?domain=flipkart.com&sz=128',
+  'Swiggy': 'https://www.google.com/s2/favicons?domain=swiggy.com&sz=128'
+};

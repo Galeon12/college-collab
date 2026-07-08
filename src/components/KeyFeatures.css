@@ -1,0 +1,337 @@
+
+.features {
+  padding: var(--space-4xl) 0;
+  background: var(--grey-50);
+}
+
+/* ── Section Header ── */
+.features__header {
+  text-align: center;
+  margin-bottom: var(--space-3xl);
+}
+
+.features__header .section-label {
+  justify-content: center;
+}
+
+.features__header .section-subtitle {
+  margin: 0 auto;
+}
+
+/* ── Feature Rows ── */
+.features__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4xl);
+}
+
+.kf-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4xl);
+}
+
+.kf-row--reverse {
+  flex-direction: row-reverse;
+}
+
+/* ── Row Content ── */
+.kf-row__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.kf-row__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--crimson);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: var(--crimson-50);
+  padding: 6px 14px;
+  border-radius: 100px;
+  width: fit-content;
+}
+
+.kf-row__title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--grey-900);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.kf-row__subtitle {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  color: var(--grey-800);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.kf-row__description {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--grey-600);
+  line-height: 1.6;
+  margin-bottom: var(--space-md);
+}
+
+/* Highlights */
+.kf-row__highlights {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-lg) 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px var(--space-lg);
+}
+
+.kf-row__highlight {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--grey-800);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.kf-row__check {
+  color: var(--crimson);
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Stat */
+.kf-row__stat {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: var(--space-md) var(--space-xl);
+  background: var(--white);
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  width: fit-content;
+}
+
+.kf-row__stat-val {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--crimson);
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.kf-row__stat-label {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--grey-600);
+  line-height: 1.3;
+  font-weight: 600;
+  max-width: 140px;
+}
+
+/* ── Row Media / Card ── */
+.kf-row__media {
+  flex: 1.25;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.kf-media-card {
+  width: 100%;
+  max-width: 750px;
+  aspect-ratio: 16/9;
+  background: var(--white);
+  border-radius: var(--radius-2xl);
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3), 0 15px 30px -10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  position: relative;
+  transform: perspective(1000px) rotateY(-3deg) rotateX(2deg);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
+}
+
+.kf-row--reverse .kf-media-card {
+  transform: perspective(1000px) rotateY(3deg) rotateX(2deg);
+}
+
+.kf-media-card--portrait {
+  aspect-ratio: 4/5 !important;
+  max-width: 420px !important;
+}
+
+.kf-media-card:hover {
+  transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-8px);
+  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.4), 0 20px 40px -15px rgba(0, 0, 0, 0.25);
+}
+
+/* Slideshow overrides to fit the new card */
+.kf-card__slideshow {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: var(--grey-100);
+  overflow: hidden;
+}
+
+/* Individual slide */
+.kf-card__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out, transform 3s ease;
+  transform: scale(1.05);
+}
+
+.kf-card__slide.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.kf-card__slide-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Placeholder */
+.kf-card__slide-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, var(--grey-100), var(--crimson-50));
+}
+
+.kf-card__placeholder-icon {
+  font-size: 3rem;
+  opacity: 0.8;
+}
+
+.kf-card__placeholder-label {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--grey-700);
+  text-align: center;
+  padding: 0 24px;
+}
+
+/* Slide dot indicators */
+.kf-card__dots {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 8px 12px;
+  border-radius: 100px;
+  backdrop-filter: blur(4px);
+}
+
+.kf-card__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(220, 38, 38, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
+}
+
+.kf-card__dot.active {
+  background: var(--crimson);
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* ════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════ */
+@media (max-width: 960px) {
+  .kf-row, .kf-row--reverse {
+    flex-direction: column;
+    gap: var(--space-2xl);
+  }
+
+  .kf-row__content {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .kf-media-card {
+    transform: none !important;
+    max-width: 100%;
+    aspect-ratio: 16/9;
+  }
+  
+  .kf-row__title {
+    font-size: 2.2rem;
+  }
+
+  .kf-row__description {
+    max-width: 100%;
+    margin: 0 0 var(--space-sm);
+  }
+}
+
+@media (max-width: 600px) {
+  .features {
+    padding: var(--space-3xl) 0;
+  }
+  
+  .kf-row__highlights {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 var(--space-sm);
+  }
+
+  .kf-row__highlight {
+    text-align: left;
+    font-size: 0.95rem;
+  }
+  
+  .kf-row__stat {
+    width: 100%;
+    max-width: 100%;
+    justify-content: flex-start;
+    padding: var(--space-md);
+  }
+  
+  .kf-media-card {
+    aspect-ratio: 16/9;
+    border-radius: var(--radius-xl);
+  }
+  
+  .kf-row__title {
+    font-size: 1.8rem;
+  }
+
+  .kf-row__subtitle {
+    font-size: 1.1rem;
+  }
+}

@@ -1,0 +1,15 @@
+export { default as Navbar } from './Navbar';
+export { default as Hero } from './Hero';
+export { default as StatsBar } from './StatsBar';
+export { default as YCombinator } from './YCombinator';
+export { default as Team } from './Team';
+export { default as TrainingModule } from './TrainingModule';
+export { default as Roadmap } from './Roadmap';
+export { default as DeliveryModes } from './DeliveryModes';
+export { default as KeyFeatures } from './KeyFeatures';
+export { default as Placements } from './Placements';
+export { default as Testimonials } from './Testimonials';
+export { default as PricingPlans } from './PricingPlans';
+export { default as Certificate } from './Certificate';
+export { default as FAQ } from './FAQ';
+export { default as Contact } from './Contact';

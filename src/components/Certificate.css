@@ -1,0 +1,170 @@
+/* ─── Certificate Section ─── */
+.certificate {
+  padding: var(--space-4xl) 0;
+  background: var(--white);
+  overflow: hidden;
+  position: relative;
+}
+
+.certificate__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3xl);
+}
+
+/* ─── Left Side: Content ─── */
+.certificate__content {
+  flex: 1;
+  max-width: 550px;
+}
+
+.certificate__content .section-title {
+  margin-bottom: var(--space-xl);
+  line-height: 1.2;
+}
+
+.certificate__content .section-subtitle {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--grey-600);
+  margin-bottom: var(--space-2xl);
+}
+
+.certificate__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 32px;
+  background: var(--crimson);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);
+}
+
+.certificate__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6);
+  background: var(--crimson-dark, #b91c1c);
+}
+
+/* ─── Right Side: Visual ─── */
+.certificate__visual {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Radial glow behind certificate */
+.certificate__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle,
+      rgba(220, 38, 38, 0.15) 0%,
+      rgba(220, 38, 38, 0.05) 40%,
+      transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: glowPulse 4s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes glowPulse {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+/* Certificate Image Wrapper with floating effect */
+.certificate__image-wrapper {
+  position: relative;
+  z-index: 1;
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(220, 38, 38, 0.1);
+  background: var(--white);
+  padding: 8px;
+  animation: floatImage 6s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+.certificate__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+@keyframes floatImage {
+
+  0%,
+  100% {
+    transform: translateY(0) rotateX(2deg) rotateY(-2deg);
+  }
+
+  50% {
+    transform: translateY(-15px) rotateX(-2deg) rotateY(2deg);
+  }
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .certificate__container {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-4xl);
+  }
+
+  .certificate__content {
+    max-width: 100%;
+  }
+
+  .certificate__content .section-title,
+  .certificate__content .section-label {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .certificate__visual {
+    width: 100%;
+    padding: 0 var(--space-xl);
+  }
+
+  .certificate__image-wrapper {
+    animation: floatMobile 6s ease-in-out infinite;
+  }
+
+  @keyframes floatMobile {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+}
