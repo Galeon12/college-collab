@@ -190,6 +190,38 @@ app.get('/api/applications', async (req, res) => {
   }
 });
 
+// Diagnostic route to test SMTP credentials and show the exact error in the browser
+app.get('/api/test-email', async (req, res) => {
+  try {
+    const testMailOptions = {
+      from: `"Test Server" <${process.env.SMTP_USER}>`,
+      to: process.env.SMTP_USER,
+      subject: 'Diagnostic SMTP Test',
+      text: 'If you receive this, the Render server can successfully send emails.',
+    };
+    
+    await transporter.sendMail(testMailOptions);
+    return res.json({ 
+      success: true, 
+      message: 'Test email successfully sent to ' + process.env.SMTP_USER,
+      credentials: {
+        user_configured: !!process.env.SMTP_USER,
+        pass_configured: !!process.env.SMTP_PASS
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Failed to send email. See error object for details.',
+      error: error.message,
+      credentials: {
+        user_configured: !!process.env.SMTP_USER,
+        pass_configured: !!process.env.SMTP_PASS
+      }
+    });
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
