@@ -7,8 +7,8 @@ export default function YCombinator() {
       <div className="container ycombinator__inner">
         <div className="ycombinator__content">
           <span className="section-label">About Us</span>
-          <h2 className="section-title ycombinator__title">
-            Backed by the World's Most <br />Prestigious Accelerator
+          <h2 className="section-title ycombinator__title text-ink-900">
+            Backed by the World's Most <br /><span className="text-crimson">Prestigious Accelerator</span>
           </h2>
           <p className="ycombinator__desc">
             AlgoUniversity is a Y Combinator (W21) backed ed-tech company

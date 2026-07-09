@@ -121,3 +121,14 @@
     max-width: 350px;
   }
 }
+
+/* ── Quirky elements positioning ── */
+.team__quirky-hex {
+  top: 60px;
+  left: 24px;
+}
+
+.team__quirky-code {
+  bottom: 40px;
+  right: 40px;
+}

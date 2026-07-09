@@ -13,7 +13,7 @@ export default function Certificate() {
         {/* Left Side: Content */}
         <div className="certificate__content">
           <span className="section-label">Recognition</span>
-          <h2 className="section-title">Certificate of Externship</h2>
+          <h2 className="section-title text-ink-900">Certificate of <span className="text-crimson">Externship</span></h2>
           <p className="section-subtitle">
             Every student who successfully completes the AlgoUniversity training programme receives an
             industry-recognised Certificate of Externship. This credential signals to top employers that

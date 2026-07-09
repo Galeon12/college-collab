@@ -12,7 +12,7 @@ export default function Placements() {
       <div className="container">
         <div className="placements__header">
           <span className="section-label">Results</span>
-          <h2 className="section-title">Placement Results That Speak</h2>
+          <h2 className="section-title text-ink-900">Placement Results <span className="text-crimson">That Speak</span></h2>
           <p className="section-subtitle">
             Our alumni are placed at the world's leading tech companies, 
             with consistently exceptional CTC packages.

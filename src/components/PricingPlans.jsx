@@ -8,11 +8,11 @@ export default function PricingPlans() {
   };
 
   return (
-    <section className="pricing" id="pricing">
+    <section className="pricing fade-in-section" id="pricing">
       <div className="container">
         <div className="pricing__header">
           <span className="section-label">Plans</span>
-          <h2 className="section-title">Choose the Right Plan <br />for Your Campus</h2>
+          <h2 className="section-title text-ink-900">Choose the Right Plan <br />for <span className="text-crimson">Your Campus</span></h2>
           <p className="section-subtitle">
             Flexible pricing designed for colleges of all sizes.
             Every plan includes our industry-leading curriculum and placement support.

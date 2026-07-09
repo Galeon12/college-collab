@@ -1,0 +1,86 @@
+/* ═══════════════════════════════════════════
+   Quirky Background Elements
+   ═══════════════════════════════════════════ */
+
+/* ── Orbit Circle with animated dot ── */
+.quirky-orbit {
+  position: absolute;
+  pointer-events: none;
+}
+
+.quirky-orbit svg {
+  display: block;
+}
+
+.quirky-orbit__dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: orbitSpin 8s linear infinite;
+}
+
+.quirky-orbit__dot-point {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: #EF4444;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+}
+
+@keyframes orbitSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Dot Grid ── */
+.quirky-dotgrid {
+  position: absolute;
+  pointer-events: none;
+  width: 96px;
+  height: 56px;
+  background-image: radial-gradient(#FECACA 2px, transparent 2px);
+  background-size: 16px 16px;
+  opacity: 0.7;
+}
+
+/* ── Hexagons ── */
+.quirky-hexagons {
+  position: absolute;
+  pointer-events: none;
+  width: 120px;
+  height: 180px;
+  opacity: 0.4;
+}
+
+/* ── Code symbols ── */
+.quirky-code {
+  position: absolute;
+  pointer-events: none;
+  font-size: 3rem;
+  font-weight: 800;
+  font-family: 'Courier New', monospace;
+  opacity: 0.12;
+  user-select: none;
+}
+
+/* ── Cross / Plus ── */
+.quirky-cross {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.25;
+}
+
+/* ── Hide on mobile where there's no gutter space ── */
+@media (max-width: 900px) {
+  .quirky-orbit,
+  .quirky-dotgrid,
+  .quirky-hexagons,
+  .quirky-code,
+  .quirky-cross {
+    display: none;
+  }
+}

@@ -171,3 +171,20 @@
     z-index: 2;
   }
 }
+
+/* ── Quirky elements positioning ── */
+.roadmap__quirky-orbit {
+  top: 50%;
+  left: -80px;
+  transform: translateY(-50%);
+}
+
+.roadmap__quirky-angle {
+  top: 60px;
+  right: 24px;
+}
+
+.roadmap__quirky-curly {
+  bottom: 60px;
+  left: 24px;
+}

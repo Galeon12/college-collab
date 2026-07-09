@@ -106,3 +106,14 @@
     margin: 0 auto;
   }
 }
+
+/* ── Quirky elements positioning ── */
+.delivery__quirky-dots {
+  top: 60px;
+  right: 32px;
+}
+
+.delivery__quirky-code {
+  bottom: 50px;
+  left: 36px;
+}

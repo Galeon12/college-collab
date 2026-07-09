@@ -123,13 +123,13 @@ export default function TrainingModule() {
   const heights = { pinnacle: 52, nexus: 76, apex: 100 };
 
   return (
-    <section className="training" id="training" ref={sectionRef}>
+    <section className="training fade-in-section" id="training" ref={sectionRef}>
       <div className="container">
 
         {/* ── Section Header ── */}
         <div className="training__header">
           <span className="section-label">Curriculum</span>
-          <h2 className="section-title">The 3-Phase Training Module</h2>
+          <h2 className="section-title text-ink-900">The 3-Phase <span className="text-crimson">Training Module</span></h2>
           <p className="section-subtitle">
             One ladder, three levels. Pick the right starting point for your students —
             the curriculum adapts to where they are and where they need to go.

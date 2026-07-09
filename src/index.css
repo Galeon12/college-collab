@@ -2,7 +2,7 @@
    AlgoUniversity Campus Training Programme — Design System
    ═══════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
 /* ─── CSS Reset ─── */
 *,
@@ -24,19 +24,31 @@
   --crimson-200: #FECACA;
   --crimson-900: #7F1D1D;
 
-  /* Neutrals */
+  /* Neutrals (Mapped to Ink palette matching reference) */
   --white: #FFFFFF;
-  --off-white: #FAFAFA;
-  --grey-50: #F9FBFC;
-  --grey-100: #F1F3F5;
-  --grey-200: #E9ECEF;
-  --grey-300: #DEE2E6;
-  --grey-400: #CED4DA;
-  --grey-500: #ADB5BD;
-  --grey-600: #6C757D;
-  --grey-700: #514F6E;
-  --grey-800: #343A40;
-  --grey-900: #1B1D21;
+  --off-white: #f8fafc;
+  --grey-50: #f8fafc;
+  --grey-100: #f1f5f9;
+  --grey-200: #e2e8f0;
+  --grey-300: #cbd5e1;
+  --grey-400: #94a3b8;
+  --grey-500: #64748b;
+  --grey-600: #475569;
+  --grey-700: #334155;
+  --grey-800: #1e293b;
+  --grey-900: #0f172a;
+
+  /* New Reference Variables */
+  --ink-900: var(--grey-900);
+  --ink-800: var(--grey-800);
+  --ink-700: var(--grey-700);
+  --ink-600: var(--grey-600);
+  --ink-300: var(--grey-300);
+  
+  --paper: #FAFAFA;
+  --card: #FFFFFF;
+  --sand-100: #F3F4F6;
+  --muted-foreground: var(--grey-500);
 
   /* Accents */
   --accent-blue: #2563EB;
@@ -45,8 +57,8 @@
   --accent-purple: #7C3AED;
 
   /* Typography */
-  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Spacing */
   --space-xs: 4px;
@@ -96,7 +108,7 @@ html {
 body {
   font-family: var(--font-body);
   color: var(--grey-900);
-  background-color: var(--white);
+  background-color: var(--paper);
   line-height: 1.6;
   overflow-x: hidden;
 }
@@ -313,6 +325,38 @@ ol {
 .animate-on-scroll.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ─── Fade In Section ─── */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Logo Hover Fill ─── */
+.hover-fill-logo {
+  transition: fill 0.4s ease, color 0.4s ease;
+  fill: transparent;
+}
+
+.card-with-logo:hover .hover-fill-logo {
+  fill: currentColor;
+}
+
+/* Removed vertical-lines-overlay as requested */
+
+.text-crimson {
+  color: var(--crimson) !important;
+}
+.text-ink-900 {
+  color: var(--ink-900) !important;
 }
 
 /* ─── Responsive ─── */

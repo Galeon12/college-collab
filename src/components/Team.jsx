@@ -1,13 +1,17 @@
 import { TEAM } from '../data';
+import { Hexagons, CodeSymbol } from './QuirkyBackgrounds';
 import './Team.css';
 
 export default function Team() {
   return (
-    <section className="team" id="team">
+    <section className="team" id="team" style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* Quirky elements */}
+      <Hexagons className="team__quirky-hex" />
+      <CodeSymbol className="team__quirky-code" color="#DC2626">&lt;/&gt;</CodeSymbol>
       <div className="container">
         <div className="team__header">
           <span className="section-label">Our Team</span>
-          <h2 className="section-title">Meet the team behind your success</h2>
+          <h2 className="section-title text-ink-900">Meet the team behind <span className="text-crimson">your success</span></h2>
           <p className="section-subtitle">
             Our mentors are industry veterans from Google, Microsoft, Amazon, and top IITs — 
             bringing real-world engineering expertise to every classroom.

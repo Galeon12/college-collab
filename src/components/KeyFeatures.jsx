@@ -82,13 +82,13 @@ const BADGE_LABELS = {
 
 export default function KeyFeatures() {
   return (
-    <section className="features" id="features">
+    <section className="features fade-in-section" id="features">
       <div className="container">
 
         {/* ── Section Header ── */}
         <div className="features__header">
           <span className="section-label">Key Features</span>
-          <h2 className="section-title">What Sets Us Apart</h2>
+          <h2 className="section-title text-ink-900">What Sets <span className="text-crimson">Us Apart</span></h2>
           <p className="section-subtitle">
             Exclusive programmes and advantages that go beyond traditional campus training.
           </p>
@@ -115,7 +115,12 @@ export default function KeyFeatures() {
                     {badgeLabel}
                   </div>
                   
-                  <h3 className="kf-row__title">{feature.title}</h3>
+                  <h3 className="kf-row__title text-ink-900">
+                    {feature.title === 'The Talent Club' && <>The <span className="text-crimson">Talent Club</span></>}
+                    {feature.title === 'The Hiring Tournament' && <>The <span className="text-crimson">Hiring Tournament</span></>}
+                    {feature.title === 'The AlgoUniversity Advantage' && <>The AlgoUniversity <span className="text-crimson">Advantage</span></>}
+                    {!['The Talent Club', 'The Hiring Tournament', 'The AlgoUniversity Advantage'].includes(feature.title) && feature.title}
+                  </h3>
                   <p className="kf-row__subtitle">{feature.subtitle}</p>
                   <p className="kf-row__description">{feature.description}</p>
                   
@@ -139,7 +144,7 @@ export default function KeyFeatures() {
                 </div>
 
                 {/* Media/Card Side */}
-                <div className="kf-row__media">
+                <div className="kf-row__media card-with-logo">
                   <div className={`kf-media-card ${feature.title === 'The Talent Club' ? 'kf-media-card--portrait' : ''}`}>
                     <CardSlideshow slides={slides} />
                   </div>

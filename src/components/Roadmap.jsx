@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { OrbitCircle, CodeSymbol } from './QuirkyBackgrounds';
 import './Roadmap.css';
 
 const ROADMAP_STEPS = [
@@ -96,11 +97,15 @@ export default function Roadmap() {
   }, []);
 
   return (
-    <section className="roadmap" id="roadmap" ref={sectionRef}>
+    <section className="roadmap fade-in-section" id="roadmap" ref={sectionRef} style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* Quirky elements */}
+      <OrbitCircle size={280} className="roadmap__quirky-orbit" />
+      <CodeSymbol className="roadmap__quirky-angle" color="#DC2626">&lt;/&gt;</CodeSymbol>
+      <CodeSymbol className="roadmap__quirky-curly" color="#94a3b8">&#123; &#125;</CodeSymbol>
       <div className="container roadmap__container">
         <div className="roadmap__header">
           <span className="section-label">Your Journey</span>
-          <h2 className="section-title">The AlgoUniversity Roadmap</h2>
+          <h2 className="section-title text-ink-900">The AlgoUniversity <span className="text-crimson">Roadmap</span></h2>
           <p className="section-subtitle">
             From day one to your dream offer — a clear, structured path designed by FAANG engineers.
           </p>

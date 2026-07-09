@@ -63,7 +63,7 @@ export default function Testimonials() {
       <div className="container">
         <div className="testimonials__header">
           <span className="section-label">Testimonials</span>
-          <h2 className="section-title">What Our Students Say</h2>
+          <h2 className="section-title text-ink-900">What Our <span className="text-crimson">Students Say</span></h2>
           <p className="section-subtitle">
             Hear from students who transformed their careers through our programme.
           </p>
