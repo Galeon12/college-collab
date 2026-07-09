@@ -63,9 +63,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendWelcomeEmail = async (name, email) => {
+const sendEmails = async (name, email, college, phone, message) => {
   try {
-    const mailOptions = {
+    // 1. Email to the applicant
+    const applicantMailOptions = {
       from: `"AlgoUniversity" <${process.env.SMTP_USER}>`,
       to: email,
       subject: 'Consultation Request Received - AlgoUniversity',
@@ -83,10 +84,35 @@ const sendWelcomeEmail = async (name, email) => {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
-    console.log(`Welcome email sent to ${email}`);
+    // 2. Email to the admin
+    const adminMailOptions = {
+      from: `"College Collab Portal" <${process.env.SMTP_USER}>`,
+      to: process.env.SMTP_USER,
+      subject: `New Application Received: ${name} from ${college}`,
+      html: `
+        <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 8px;">
+          <h2 style="color: #b91c1c;">New Application Submission</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>College:</strong> ${college}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
+          <p><strong>Message:</strong></p>
+          <blockquote style="border-left: 4px solid #eaeaea; padding-left: 10px; color: #555;">
+            ${message || 'No message provided.'}
+          </blockquote>
+        </div>
+      `,
+    };
+
+    // Send both emails concurrently
+    await Promise.all([
+      transporter.sendMail(applicantMailOptions),
+      transporter.sendMail(adminMailOptions)
+    ]);
+    
+    console.log(`Welcome email sent to ${email} and notification sent to admin`);
   } catch (error) {
-    console.error('Error sending welcome email:', error);
+    console.error('Error sending emails:', error);
   }
 };
 
@@ -124,8 +150,8 @@ app.post('/api/applications', async (req, res) => {
     
     console.log(`Saved new application: ${name} (${college})`);
     
-    // Send welcome email (fire and forget, so we don't block the response)
-    sendWelcomeEmail(name, email);
+    // Send welcome email and admin notification (fire and forget)
+    sendEmails(name, email, college, phone, message);
     
     return res.status(201).json({
       success: true,
