@@ -45,12 +45,11 @@ export default function Contact() {
             import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID',
             import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID',
             {
-              from_name: formData.name,
-              reply_to: formData.email,
+              user_name: formData.name,
+              user_email: formData.email,
               college: formData.college,
               phone: formData.phone,
               message: formData.message,
-              to_name: 'Admin',
             },
             import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY'
           );
