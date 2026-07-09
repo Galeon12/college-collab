@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BRAND } from '../data';
 import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
+import emailjs from '@emailjs/browser';
 import './Contact.css';
 
 export default function Contact() {
@@ -26,6 +27,7 @@ export default function Contact() {
     setStatusType('');
 
     try {
+      // 1. Save to MongoDB via Backend API
       const response = await fetch('https://college-collab-er2l.onrender.com/api/applications', {
         method: 'POST',
         headers: {
@@ -37,6 +39,25 @@ export default function Contact() {
       const data = await response.json();
 
       if (response.ok && data.success) {
+        // 2. Send Email via EmailJS
+        try {
+          await emailjs.send(
+            import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID',
+            import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID',
+            {
+              from_name: formData.name,
+              reply_to: formData.email,
+              college: formData.college,
+              phone: formData.phone,
+              message: formData.message,
+              to_name: 'Admin',
+            },
+            import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY'
+          );
+        } catch (emailError) {
+          console.error("EmailJS sending failed (but DB save succeeded):", emailError);
+        }
+
         setStatusType('success');
         setStatusMsg('Thank you for your interest! Your application has been submitted, and our team will get back to you within 24 hours.');
         setFormData({ name: '', college: '', email: '', phone: '', message: '' });
