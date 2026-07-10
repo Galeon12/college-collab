@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
+import { FiCalendar, FiClock, FiUsers } from 'react-icons/fi';
 import { OrbitCircle, CodeSymbol } from './QuirkyBackgrounds';
 import './Roadmap.css';
 
 const ROADMAP_STEPS = [
   {
     id: 1,
-    phase: 'Week 1–2',
     title: 'Onboarding & Assessment',
     desc: 'Diagnostic test, skill gap analysis, personalised learning plan setup.',
     icon: '🎯',
@@ -13,45 +13,55 @@ const ROADMAP_STEPS = [
   },
   {
     id: 2,
-    phase: 'Month 1–2',
-    title: 'Fundamentals — DSA & CP',
+    title: 'Fundamentals - DSA & CP',
     desc: 'Data Structures, Algorithms, Competitive Programming patterns.',
     icon: '🧠',
-    color: '#DC2626',
+    color: '#ef4444',
   },
   {
     id: 3,
-    phase: 'Month 2–4',
-    title: 'Dev, Systems & CS Core',
-    desc: 'System Design (LLD+HLD), Full Stack Dev, OS, DBMS, Networks.',
+    title: 'System Design',
+    desc: 'Low-Level Design (LLD) and High-Level Design (HLD).',
     icon: '⚙️',
-    color: '#059669',
+    color: '#f97316',
   },
   {
     id: 4,
-    phase: 'Month 4–5',
-    title: 'Interview Mastery',
-    desc: 'Mock interviews with FAANG engineers, resume reviews.',
-    icon: '🏆',
-    color: '#D97706',
+    title: 'Full Stack Dev',
+    desc: 'Build scalable applications using modern web frameworks.',
+    icon: '💻',
+    color: '#eab308',
   },
   {
     id: 5,
-    phase: 'Month 5–6',
+    title: 'CS Core Fundamentals',
+    desc: 'Operating Systems, DBMS, and Computer Networks.',
+    icon: '📚',
+    color: '#22c55e',
+  },
+  {
+    id: 6,
+    title: 'Interview Mastery',
+    desc: 'Mock interviews with FAANG engineers, resume reviews.',
+    icon: '🏆',
+    color: '#06b6d4',
+  },
+  {
+    id: 7,
     title: 'Placement & Beyond',
     desc: 'Live hiring drives, direct referrals, offer negotiation.',
     icon: '🚀',
-    color: '#7C3AED',
+    color: '#8b5cf6',
   },
 ];
 
 // The 5 steps sit at evenly‑spaced X positions across a 1000‑wide viewBox.
 // Odd steps (1,3,5) sit on the TOP row (y=120), even steps (2,4) on the BOTTOM row (y=380).
-const VW = 1000;
+const VW = 1280;
 const TOP_Y = 200;
 const BOT_Y = 400;
 
-function nodeX(idx) { return 100 + idx * 200; }
+function nodeX(idx) { return 100 + idx * 180; }
 function nodeY(idx) { return idx % 2 === 0 ? TOP_Y : BOT_Y; }
 
 // Build a smooth cubic‑bezier path through all 5 node centres.
@@ -107,11 +117,27 @@ export default function Roadmap() {
           <span className="section-label">Your Journey</span>
           <h2 className="section-title text-ink-900">The AlgoUniversity <span className="text-crimson">Roadmap</span></h2>
           <p className="section-subtitle">
-            From day one to your dream offer — a clear, structured path designed by FAANG engineers.
+            From day one to your dream offer - a clear, structured path designed by FAANG engineers.
           </p>
+
+          {/* ── Highlights ── */}
+          <div className="roadmap-highlights">
+            <div className="roadmap-highlight">
+              <FiCalendar className="roadmap-highlight-icon" />
+              <span className="roadmap-highlight-text">Training Program</span>
+            </div>
+            <div className="roadmap-highlight">
+              <FiClock className="roadmap-highlight-icon" />
+              <span className="roadmap-highlight-text">Access to Contests</span>
+            </div>
+            <div className="roadmap-highlight">
+              <FiUsers className="roadmap-highlight-icon" />
+              <span className="roadmap-highlight-text">Access to Hiring Partners</span>
+            </div>
+          </div>
         </div>
 
-        {/* SVG Canvas — sits behind the cards */}
+        {/* SVG Canvas - sits behind the cards */}
         <div className="roadmap__canvas-wrap">
           <svg
             className="roadmap__svg"
@@ -122,10 +148,12 @@ export default function Roadmap() {
             <defs>
               <linearGradient id="pathGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%"   stopColor="#6366f1" />
-                <stop offset="25%"  stopColor="#DC2626" />
-                <stop offset="50%"  stopColor="#059669" />
-                <stop offset="75%"  stopColor="#D97706" />
-                <stop offset="100%" stopColor="#7C3AED" />
+                <stop offset="16%"  stopColor="#ef4444" />
+                <stop offset="33%"  stopColor="#f97316" />
+                <stop offset="50%"  stopColor="#eab308" />
+                <stop offset="66%"  stopColor="#22c55e" />
+                <stop offset="83%"  stopColor="#06b6d4" />
+                <stop offset="100%" stopColor="#8b5cf6" />
               </linearGradient>
               <filter id="glow">
                 <feGaussianBlur stdDeviation="4" result="blur" />
@@ -182,10 +210,10 @@ export default function Roadmap() {
             ))}
           </svg>
 
-          {/* Overlay cards — absolutely positioned to match node positions */}
+          {/* Overlay cards - absolutely positioned to match node positions */}
           {ROADMAP_STEPS.map((step, i) => {
             const isTop = i % 2 === 0;
-            // Convert from SVG coords (viewBox 0–1000) to % for responsive placement
+            // Convert from SVG coords (viewBox 0-1000) to % for responsive placement
             const leftPct = (nodeX(i) / VW) * 100;
             return (
               <div
@@ -193,9 +221,6 @@ export default function Roadmap() {
                 className={`roadmap__card roadmap__card--${isTop ? 'top' : 'bot'}`}
                 style={{ left: `${leftPct}%`, '--accent': step.color }}
               >
-                <div className="roadmap__card-phase" style={{ color: step.color }}>
-                  {step.phase}
-                </div>
                 <h3 className="roadmap__card-title">{step.title}</h3>
                 <p className="roadmap__card-desc">{step.desc}</p>
               </div>

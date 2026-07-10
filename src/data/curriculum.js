@@ -73,7 +73,7 @@ export const KEY_FEATURES = [
   {
     title: "The Talent Club",
     subtitle: "A premium, invite-only community of 1300+ HRs, CXOs, VPs & Directors.",
-    description: "This network bypasses traditional job boards, giving students an unfair advantage in the hiring market. Companies post requirements to Talent Club FIRST — before the general public.",
+    description: "This network bypasses traditional job boards, giving students an unfair advantage in the hiring market. Companies post requirements to Talent Club FIRST - before the general public.",
     highlights: [
       "1300+ HRs, CXOs, VPs & Directors",
       "Bypasses traditional job boards",
@@ -83,7 +83,7 @@ export const KEY_FEATURES = [
   },
   {
     title: "The Hiring Tournament",
-    subtitle: "AlgoUniversity runs monthly hiring tournament — connecting trained students directly to the recruiters.",
+    subtitle: "AlgoUniversity runs monthly hiring tournament - connecting trained students directly to the recruiters.",
     description: "Top performers are fast-tracked to interview rounds. Direct referral pipeline into big-tech companies like Uber, Amazon, microsoft etc. AUHT - Srikakulam with Union Minister Ram Mohan Naidu saw 2,971 Applications and 230+ Job Openings.",
     highlights: [
       "Monthly hiring tournaments",

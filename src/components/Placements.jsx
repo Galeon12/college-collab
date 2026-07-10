@@ -28,7 +28,7 @@ export default function Placements() {
           ))}
         </div>
 
-        {/* Alumni Spotlight — title row with See More */}
+        {/* Alumni Spotlight - title row with See More */}
         <div className="placements__alumni-header">
           <h3 className="placements__alumni-title">Alumni Spotlight</h3>
           <a
@@ -41,7 +41,7 @@ export default function Placements() {
           </a>
         </div>
 
-        {/* Top 4 grid — no slider */}
+        {/* Top 4 grid - no slider */}
         <div className="placements__alumni-grid">
           {TOP_ALUMNI.map((alum, i) => (
             <div key={i} className="placements__alumni-card">

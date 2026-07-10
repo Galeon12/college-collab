@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FAQS } from '../data';
+import { FiPlus } from 'react-icons/fi';
 import { OrbitCircle, DotGrid, CodeSymbol } from './QuirkyBackgrounds';
 import './FAQ.css';
 
@@ -33,7 +34,7 @@ export default function FAQ() {
             >
               <button className="faq__question" onClick={() => toggle(i)}>
                 {faq.question}
-                <span className="faq__icon">+</span>
+                <span className="faq__icon"><FiPlus /></span>
               </button>
               <div className="faq__answer">
                 <p className="faq__answer-text">{faq.answer}</p>

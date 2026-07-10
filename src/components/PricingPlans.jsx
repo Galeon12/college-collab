@@ -23,7 +23,7 @@ export default function PricingPlans() {
           {PRICING_PLANS.map((plan, i) => (
             <div
               key={i}
-              className={`pricing__card ${plan.highlighted ? 'pricing__card--highlighted' : ''}`}
+              className="pricing__card"
             >
               {plan.badge && (
                 <div
@@ -46,12 +46,7 @@ export default function PricingPlans() {
               <div className="pricing__features">
                 {plan.features.map((feature, j) => (
                   <div key={j} className="pricing__feature">
-                    <span
-                      className={`pricing__feature-check ${plan.highlighted
-                        ? 'pricing__feature-check--crimson'
-                        : 'pricing__feature-check--grey'
-                        }`}
-                    >
+                    <span className="pricing__feature-check">
                       ✓
                     </span>
                     {feature}
@@ -60,8 +55,7 @@ export default function PricingPlans() {
               </div>
 
               <button
-                className={`pricing__cta ${plan.highlighted ? 'pricing__cta--primary' : 'pricing__cta--outline'
-                  }`}
+                className="pricing__cta"
                 onClick={() => scrollTo('contact')}
               >
                 Get Started

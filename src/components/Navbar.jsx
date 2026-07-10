@@ -1,19 +1,21 @@
 import { useState, useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import { BRAND } from '../data';
 import './Navbar.css';
 
 const NAV_ITEMS = [
-  { label: 'Training', target: 'training' },
+  { label: 'Roadmap', target: 'roadmap' },
   { label: 'Features', target: 'features' },
+  { label: 'Curriculum', target: 'training' },
   { label: 'Results', target: 'placements' },
   { label: 'Plans', target: 'pricing' },
   { label: 'FAQ', target: 'faq' },
-  { label: 'About', target: 'about' },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -40,9 +42,17 @@ export default function Navbar() {
               {item.label}
             </button>
           ))}
-          <button className="navbar__cta" onClick={() => scrollTo('contact')}>
-            Connect Now
-          </button>
+          {!isAuthenticated ? (
+            <button className="navbar__cta" onClick={() => loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })}>
+              Sign Up
+            </button>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '16px' }}>
+              <button className="navbar__cta" style={{ background: 'var(--grey-200)', color: 'var(--grey-800)' }} onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+                Log Out
+              </button>
+            </div>
+          )}
         </div>
 
         <button
@@ -62,9 +72,15 @@ export default function Navbar() {
             {item.label}
           </button>
         ))}
-        <button className="navbar__mobile-cta" onClick={() => scrollTo('contact')}>
-          Connect Now
-        </button>
+        {!isAuthenticated ? (
+          <button className="navbar__mobile-cta" onClick={() => loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })}>
+            Sign Up
+          </button>
+        ) : (
+          <button className="navbar__mobile-cta" style={{ background: 'var(--grey-200)', color: 'var(--grey-800)' }} onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+            Log Out
+          </button>
+        )}
       </div>
     </nav>
   );

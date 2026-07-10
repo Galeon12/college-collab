@@ -17,7 +17,7 @@ export const TESTIMONIALS = [
     name: "Darshan Arkhade",
     company: "Google",
     package: "53 LPA",
-    text: "The Talent Club gave me an unfair advantage. The advanced training and direct referrals fast-tracked my preparation. AlgoUniversity doesn't just teach — it transforms you into an interview machine.",
+    text: "The Talent Club gave me an unfair advantage. The advanced training and direct referrals fast-tracked my preparation. AlgoUniversity doesn't just teach - it transforms you into an interview machine.",
     initials: "DA",
   },
   {
@@ -32,22 +32,26 @@ export const TESTIMONIALS = [
 export const FAQS = [
   {
     question: "How would this training program be helpful in placements?",
-    answer: "Our training program is designed to bridge the gap between college academics and industry expectations. Through rigorous DSA, System Design, and CS fundamentals training, followed by realistic mock interviews with FAANG engineers, students become interview-ready. We also provide direct referrals to our network of 150+ hiring partners, significantly boosting placement outcomes.",
+    answer: "Our training program bridges the gap between college academics and industry expectations through a structured 3-Phase Program covering DSA, Development, System Design, and interview preparation. Students gain hands-on learning, participate in realistic mock interviews conducted by engineers from leading product-based companies, and receive continuous mentorship. Additionally, they benefit from placement assistance, referral opportunities, and access to our hiring partner network, significantly improving their chances of securing top software engineering roles.",
   },
   {
-    question: "Who are eligible for this training program?",
-    answer: "The program is tailored for college students pursuing technical degrees (B.Tech, MCA, etc.) who want to land roles at top product-based companies. We partner directly with colleges, so entire batches can be enrolled. We also have a Talent Club for the top-performing students across our partner campuses.",
+    question: "Who is eligible for this training program?",
+    answer: "This program is designed for students aspiring to secure software engineering roles in product-based companies. Students from the 3rd to 7th semester who are committed to strengthening their technical skills and placement preparation are eligible to enroll.",
   },
   {
     question: "How is this training program different?",
-    answer: "Unlike traditional academic courses, our pedagogy is practitioner-led. The curriculum is crafted and delivered by engineers who have built products at Google, Microsoft, Amazon, and other tech giants. We focus heavily on competitive programming, real-world system design, and behavioral interview coaching, coupled with data-driven progress tracking.",
+    answer: "Unlike traditional placement courses, our program is designed and delivered by engineers from leading product-based companies. It combines live expert-led classes, personalized mentorship, 24×7 doubt support, continuous performance tracking, mock interviews, placement assistance, and referral opportunities with an industry-aligned curriculum to ensure students are fully prepared for software engineering roles.",
   },
   {
     question: "How is the curriculum designed for the training program?",
-    answer: "The curriculum follows a structured 3-phase approach: Phase 1 builds a solid foundation in Data Structures and Algorithms. Phase 2 dives into System Design (LLD & HLD), Full Stack Development, and core CS subjects (OS, DBMS, Networks). Phase 3 is dedicated entirely to Interview Mastery, including resume building, mock interviews, and company-specific preparation.",
+    answer: "Our curriculum is designed by industry experts based on current hiring trends and the skills required by leading technology companies. Additionally, we customize the curriculum to align with the academic structure, placement goals, and specific requirements of each university or institution, ensuring the training complements the college’s objectives.",
   },
   {
-    question: "Do you provide certification to the students over the completion of this training program?",
-    answer: "Yes, every student who successfully completes the AlgoUniversity program receives an industry-recognized Certificate of Externship. This credential signals to top employers that the student has undergone rigorous, FAANG-level technical training and is ready to contribute from day one.",
+    question: "Do you provide certification upon completion of the training program?",
+    answer: "Yes. Students who successfully complete the training program receive an official AlgoUniversity Certificate of Completion. Additionally, students who complete the real-world project in the program are awarded an industry-recognized Software Engineering Co-op Internship Experience Certificate, reflecting their practical learning and project experience.",
   },
+  {
+    question: "Will these training classes clash with regular college hours?",
+    answer: "No. Our live classes are scheduled after 5:00 PM to ensure they do not interfere with regular lectures, labs, or academic activities. We work closely with the college administration to finalize the class schedule based on the institution’s preferred timings and availability.",
+  }
 ];

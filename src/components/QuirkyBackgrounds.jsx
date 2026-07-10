@@ -2,7 +2,7 @@ import './QuirkyBackgrounds.css';
 
 /**
  * Animated circle with a dot orbiting the perimeter.
- * Pure CSS animation — no JS needed.
+ * Pure CSS animation - no JS needed.
  */
 function OrbitCircle({ size = 160, className = '' }) {
   const r = (size / 2) - 8; // leave room for the dot
@@ -69,6 +69,6 @@ function CrossMark({ className = '' }) {
 export { OrbitCircle, DotGrid, Hexagons, CodeSymbol, CrossMark };
 
 export default function QuirkyBackgrounds() {
-  // This component is now empty — quirky elements are embedded in individual sections
+  // This component is now empty - quirky elements are embedded in individual sections
   return null;
 }

@@ -19,7 +19,7 @@ export default function Hero() {
         loop
         playsInline
       />
-      {/* Clean dark overlay — no red tint */}
+      {/* Clean dark overlay - no red tint */}
       <div className="hero__overlay" />
       {/* Bottom gradient fade to white */}
       <div className="hero__bottom-fade" />

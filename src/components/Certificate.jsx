@@ -13,10 +13,11 @@ export default function Certificate() {
         {/* Left Side: Content */}
         <div className="certificate__content">
           <span className="section-label">Recognition</span>
-          <h2 className="section-title text-ink-900">Certificate of <span className="text-crimson">Externship</span></h2>
+          <h2 className="section-title text-ink-900">Certificates of <span className="text-crimson">Completion & Internship</span></h2>
           <p className="section-subtitle">
-            Every student who successfully completes the AlgoUniversity training programme receives an
-            industry-recognised Certificate of Externship. This credential signals to top employers that
+            Every student who successfully completes any training programme receives a Certificate of Completion. 
+            Additionally, students who complete the industry-level project during the dev season are awarded a 
+            <strong> 2-Month SWE Internship Certificate</strong>. These credentials signal to top employers that 
             you have undergone rigorous, FAANG-level technical training and are ready to contribute from day one.
           </p>
           <button className="certificate__cta" onClick={() => scrollTo('contact')}>
@@ -30,7 +31,7 @@ export default function Certificate() {
           <div className="certificate__image-wrapper">
             <img
               src="/certificate.png"
-              alt="AlgoUniversity Certificate of Externship"
+              alt="AlgoUniversity Certificate of Internship"
               className="certificate__img"
             />
           </div>

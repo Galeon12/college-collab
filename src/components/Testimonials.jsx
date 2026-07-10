@@ -21,7 +21,7 @@ export default function Testimonials() {
     }
   }, []);
 
-  // Update dot on scroll — uses scroll progress to determine which card is "active"
+  // Update dot on scroll - uses scroll progress to determine which card is "active"
   const handleScroll = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;

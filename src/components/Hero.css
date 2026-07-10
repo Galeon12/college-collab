@@ -23,7 +23,7 @@
   border-radius: 32px;
 }
 
-/* Clean dark overlay — NO red tint */
+/* Clean dark overlay - NO red tint */
 .hero__overlay {
   position: absolute;
   top: calc(var(--nav-height) + 24px);
@@ -41,7 +41,7 @@
   border-radius: 32px;
 }
 
-/* Bottom gradient fade — video fades to white at section end */
+/* Bottom gradient fade - video fades to white at section end */
 .hero__bottom-fade {
   position: absolute;
   bottom: 24px;

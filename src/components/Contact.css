@@ -41,13 +41,6 @@
   margin-bottom: var(--space-md);
 }
 
-.contact__label::before {
-  content: '';
-  width: 24px;
-  height: 2px;
-  background: var(--crimson-light);
-}
-
 .contact__title {
   font-size: clamp(28px, 4vw, 38px);
   font-weight: 800;

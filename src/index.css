@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   AlgoUniversity Campus Training Programme — Design System
+   AlgoUniversity Campus Training Programme - Design System
    ═══════════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
@@ -15,7 +15,7 @@
 
 /* ─── Design Tokens ─── */
 :root {
-  /* Brand Colors — Tailwind Red Palette */
+  /* Brand Colors - Tailwind Red Palette */
   --crimson: #DC2626;
   --crimson-dark: #B91C1C;
   --crimson-light: #EF4444;
@@ -44,7 +44,7 @@
   --ink-700: var(--grey-700);
   --ink-600: var(--grey-600);
   --ink-300: var(--grey-300);
-  
+
   --paper: #FAFAFA;
   --card: #FFFFFF;
   --sand-100: #F3F4F6;
@@ -152,14 +152,14 @@ ol {
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 var(--space-xl);
+  padding: 0 clamp(32px, 8vw, 180px);
 }
 
 .section-padding {
   padding: var(--space-4xl) 0;
 }
 
-/* ─── Section Label — Pill Badge ─── */
+/* ─── Section Label - Pill Badge ─── */
 .section-label {
   display: inline-flex;
   align-items: center;
@@ -355,6 +355,7 @@ ol {
 .text-crimson {
   color: var(--crimson) !important;
 }
+
 .text-ink-900 {
   color: var(--ink-900) !important;
 }

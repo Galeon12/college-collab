@@ -13,7 +13,7 @@ export default function Team() {
           <span className="section-label">Our Team</span>
           <h2 className="section-title text-ink-900">Meet the team behind <span className="text-crimson">your success</span></h2>
           <p className="section-subtitle">
-            Our mentors are industry veterans from Google, Microsoft, Amazon, and top IITs — 
+            Our mentors are industry veterans from Google, Microsoft, Amazon, and top IITs - 
             bringing real-world engineering expertise to every classroom.
           </p>
         </div>

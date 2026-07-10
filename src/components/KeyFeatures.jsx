@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { KEY_FEATURES } from '../data';
 import './KeyFeatures.css';
 
-// Per-feature slideshows — add more images to each array any time
+// Per-feature slideshows - add more images to each array any time
 const FEATURE_SLIDESHOWS = {
   'The Talent Club': [
     { src: '/tc_1.jpg', label: 'Talent Club Networking' },
@@ -31,9 +31,9 @@ const FEATURE_SLIDESHOWS = {
 };
 
 const FEATURE_META = {
-  'The Talent Club':           { icon: '🏆', stat: { value: '1300+', label: 'HRs, CXOs, VPs & Directors' } },
-  'The Hiring Tournament':     { icon: '⚡', stat: { value: '2971',  label: 'Applications in last AUHT' } },
-  'The AlgoUniversity Advantage': { icon: '🚀', stat: { value: '#2',   label: 'Globally ranked coding LLM' } },
+  'The Talent Club': { icon: '🏆', stat: { value: '1300+', label: 'HRs, CXOs, VPs & Directors' } },
+  'The Hiring Tournament': { icon: '⚡', stat: { value: '2971', label: 'Applications in last AUHT' } },
+  'The AlgoUniversity Advantage': { icon: '🚀', stat: { value: '#2', label: 'Globally ranked coding LLM' } },
 };
 
 // Mini per-card slideshow
@@ -97,24 +97,24 @@ export default function KeyFeatures() {
         {/* ── Feature Rows ── */}
         <div className="features__list">
           {KEY_FEATURES.map((feature, i) => {
-            const meta   = FEATURE_META[feature.title];
+            const meta = FEATURE_META[feature.title];
             const slides = FEATURE_SLIDESHOWS[feature.title];
             const badgeLabel = BADGE_LABELS[feature.title] || `Highlight`;
-            
+
             // The prompt requested: "like talent club in left and the card in right". 
             // We'll apply an alternating design for visual excellence.
             const isReversed = i % 2 !== 0;
 
             return (
               <div key={i} className={`kf-row ${isReversed ? 'kf-row--reverse' : ''}`}>
-                
+
                 {/* Content Side */}
                 <div className="kf-row__content">
                   <div className="kf-row__badge">
                     <span>{meta.icon}</span>
                     {badgeLabel}
                   </div>
-                  
+
                   <h3 className="kf-row__title text-ink-900">
                     {feature.title === 'The Talent Club' && <>The <span className="text-crimson">Talent Club</span></>}
                     {feature.title === 'The Hiring Tournament' && <>The <span className="text-crimson">Hiring Tournament</span></>}
@@ -123,7 +123,7 @@ export default function KeyFeatures() {
                   </h3>
                   <p className="kf-row__subtitle">{feature.subtitle}</p>
                   <p className="kf-row__description">{feature.description}</p>
-                  
+
                   <ul className="kf-row__highlights">
                     {feature.highlights.map((hl, j) => (
                       <li key={j} className="kf-row__highlight">

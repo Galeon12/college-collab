@@ -14,7 +14,7 @@ export default function DeliveryModes() {
           <h2 className="section-title text-ink-900">Flexible Learning, <span className="text-crimson">Your Way</span></h2>
           <p className="section-subtitle">
             Choose the delivery mode that best fits your campus infrastructure 
-            and student needs — all modes deliver the same rigorous curriculum.
+            and student needs - all modes deliver the same rigorous curriculum.
           </p>
         </div>
 

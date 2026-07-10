@@ -3,18 +3,16 @@ import { CURRICULUM_PLANS, PLAN_KEYS } from '../data';
 import './TrainingModule.css';
 
 // ─── Phase Card ──────────────────────────────────────────────────────────────
-function PhaseCard({ phase, index, isVisible }) {
-  const [start, setStart] = useState(0);
-  const hasMore = phase.items.length > 3;
-  const canPrev = start > 0;
-  const canNext = start + 3 < phase.items.length;
-  const visible = phase.items.slice(start, start + 3);
-  const totalPages = Math.ceil(phase.items.length / 3);
-  const currentPage = Math.floor(start / 3) + 1;
+function PhaseCard({ phase, index, isVisible, isLast }) {
+  const trackRef = useRef(null);
+  // Show navigation only when items are more than what fits (typically 3)
+  const hasMore = phase.items && phase.items.length > 3;
 
-  // Reset when phase changes (key-based remount handles this automatically,
-  // but guard anyway)
-  useEffect(() => { setStart(0); }, [phase.num]);
+  const scrollBy = (amount) => {
+    if (trackRef.current) {
+      trackRef.current.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div
@@ -22,45 +20,46 @@ function PhaseCard({ phase, index, isVisible }) {
       style={{ '--delay': `${index * 90}ms` }}
       data-visible={isVisible}
     >
-      <div className="tm-phase__connector">
-        <div className="tm-phase__num">{phase.num}</div>
-        {index < 2 && <div className="tm-phase__line" />}
-      </div>
+      <div className="tm-phase__num">{phase.num}</div>
 
       <div className="tm-phase__body">
         <div className="tm-phase__header">
-          <h3 className="tm-phase__title">{phase.title}</h3>
-          <span className="tm-phase__tag">{phase.tag}</span>
+          <div className="tm-phase__title">{phase.title}</div>
+          <div className="tm-phase__dash"></div>
+          <div className="tm-phase__tag">{phase.tag}</div>
 
-          {hasMore && (
-            <div className="tm-phase__nav">
-              <button
-                className={`tm-phase__nav-btn ${!canPrev ? 'tm-phase__nav-btn--disabled' : ''}`}
-                onClick={() => setStart(s => Math.max(0, s - 3))}
-                disabled={!canPrev}
-                aria-label="Previous cards"
-              >
-                &#8249;
-              </button>
-              <span className="tm-phase__nav-count">{currentPage} / {totalPages}</span>
-              <button
-                className={`tm-phase__nav-btn ${!canNext ? 'tm-phase__nav-btn--disabled' : ''}`}
-                onClick={() => setStart(s => Math.min(phase.items.length - 3, s + 3))}
-                disabled={!canNext}
-                aria-label="Next cards"
-              >
-                &#8250;
-              </button>
-            </div>
-          )}
         </div>
 
-        <div className="tm-phase__items">
-          {visible.map((item, j) => (
-            <div key={start + j} className="tm-topic-card">
-              <span className="tm-topic-card__num">{String(start + j + 1).padStart(2, '0')}</span>
+        {hasMore && (
+          <div className="tm-phase__nav">
+            <button
+              className="tm-phase__nav-btn"
+              onClick={() => scrollBy(-300)}
+              aria-label="Previous cards"
+            >
+              &#8249;
+            </button>
+            <button
+              className="tm-phase__nav-btn"
+              onClick={() => scrollBy(300)}
+              aria-label="Next cards"
+            >
+              &#8250;
+            </button>
+          </div>
+        )}
+
+        <div className="tm-phase__items" ref={trackRef}>
+          {phase.items.map((item, j) => (
+            <div key={j} className="tm-topic-card">
               <div className="tm-topic-card__name">{item.title}</div>
-              <div className="tm-topic-card__desc">{item.desc}</div>
+              {item.bullets ? (
+                <ul className="tm-topic-card__bullets">
+                  {item.bullets.map((b, i) => <li key={i}>{b}</li>)}
+                </ul>
+              ) : (
+                <div className="tm-topic-card__desc">{item.desc}</div>
+              )}
             </div>
           ))}
         </div>
@@ -69,23 +68,7 @@ function PhaseCard({ phase, index, isVisible }) {
   );
 }
 
-// ─── Staircase Step ───────────────────────────────────────────────────────────
-function StaircaseStep({ plan, isActive, onClick, heightPct, muted }) {
-  return (
-    <button
-      className={`tm-step tm-step--${plan.key} ${isActive ? 'tm-step--active' : ''} ${muted ? 'tm-step--muted' : ''}`}
-      style={{ '--h': `${heightPct}%` }}
-      onClick={onClick}
-      aria-pressed={isActive}
-    >
-      <div className="tm-step__glass">
-        <span className="tm-step__year">{plan.tagline}</span>
-        <span className="tm-step__name">{plan.label}</span>
-        <span className="tm-step__hint">{plan.description}</span>
-      </div>
-    </button>
-  );
-}
+// Removed StaircaseStep
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function TrainingModule() {
@@ -119,8 +102,7 @@ export default function TrainingModule() {
     }, 220);
   };
 
-  // Heights for visual staircase hierarchy
-  const heights = { pinnacle: 52, nexus: 76, apex: 100 };
+
 
   return (
     <section className="training fade-in-section" id="training" ref={sectionRef}>
@@ -131,25 +113,23 @@ export default function TrainingModule() {
           <span className="section-label">Curriculum</span>
           <h2 className="section-title text-ink-900">The 3-Phase <span className="text-crimson">Training Module</span></h2>
           <p className="section-subtitle">
-            One ladder, three levels. Pick the right starting point for your students —
+            One ladder, three levels. Pick the right starting point for your students -
             the curriculum adapts to where they are and where they need to go.
           </p>
         </div>
 
-        {/* ── Staircase ── */}
-        <div className={`tm-staircase ${activeKey ? 'tm-staircase--has-active' : ''}`}>
+        {/* ── Pills Selector ── */}
+        <div className="tm-pills">
           {PLAN_KEYS.map((key) => (
-            <StaircaseStep
+            <button
               key={key}
-              plan={CURRICULUM_PLANS[key]}
-              isActive={key === activeKey}
-              muted={activeKey !== null && key !== activeKey}
-              heightPct={heights[key]}
+              className={`tm-pill ${key === activeKey ? 'tm-pill--active' : ''}`}
               onClick={() => handleSelect(key)}
-            />
+            >
+              {CURRICULUM_PLANS[key].tagline}
+            </button>
           ))}
         </div>
-        <p className="tm-staircase__caption">Click a step to explore that plan's curriculum.</p>
 
 
 
@@ -173,9 +153,31 @@ export default function TrainingModule() {
                 phase={phase}
                 index={i}
                 isVisible={isVisible}
+                isLast={i === activePlan.phases.length - 1}
               />
             ))}
           </div>
+
+          {activePlan.addon && (
+            <div className="addon-section" data-visible={isVisible} style={{ '--delay': `${activePlan.phases.length * 90}ms` }}>
+               <div className="addon-block">
+                 {activePlan.addon.label && <div className="addon-block-label">{activePlan.addon.label}</div>}
+                 <div className="tm-phase__items tm-phase__items--addon">
+                   {activePlan.addon.items.map((item, j) => (
+                     <div key={j} className="tm-topic-card tm-topic-card--addon">
+                        <span className="cc-badge">ADD-ON</span>
+                        <div className="tm-topic-card__name">{item.title}</div>
+                        {item.bullets && (
+                          <ul className="tm-topic-card__bullets">
+                            {item.bullets.map((b, i) => <li key={i}>{b}</li>)}
+                          </ul>
+                        )}
+                     </div>
+                   ))}
+                 </div>
+               </div>
+            </div>
+          )}
 
 
         </div>
