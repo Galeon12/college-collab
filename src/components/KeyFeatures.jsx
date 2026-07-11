@@ -32,7 +32,7 @@ const FEATURE_SLIDESHOWS = {
 
 const FEATURE_META = {
   'The Talent Club': { icon: '🏆', stat: { value: '1300+', label: 'HRs, CXOs, VPs & Directors' } },
-  'The Hiring Tournament': { icon: '⚡', stat: { value: '2971', label: 'Applications in last AUHT' } },
+  'The Hiring Tournament': { icon: '⚡' },
   'The AlgoUniversity Advantage': { icon: '🚀', stat: { value: '#2', label: 'Globally ranked coding LLM' } },
 };
 
@@ -137,10 +137,12 @@ export default function KeyFeatures() {
                     ))}
                   </ul>
 
-                  <div className="kf-row__stat">
-                    <span className="kf-row__stat-val">{meta.stat.value}</span>
-                    <span className="kf-row__stat-label">{meta.stat.label}</span>
-                  </div>
+                  {meta.stat && (
+                    <div className="kf-row__stat">
+                      <span className="kf-row__stat-val">{meta.stat.value}</span>
+                      <span className="kf-row__stat-label">{meta.stat.label}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Media/Card Side */}

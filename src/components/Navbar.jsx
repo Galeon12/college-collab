@@ -44,7 +44,7 @@ export default function Navbar() {
           ))}
           {!isAuthenticated ? (
             <button className="navbar__cta" onClick={() => loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })}>
-              Sign Up
+              Signup/Login
             </button>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '16px' }}>
@@ -74,7 +74,7 @@ export default function Navbar() {
         ))}
         {!isAuthenticated ? (
           <button className="navbar__mobile-cta" onClick={() => loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })}>
-            Sign Up
+            Signup/Login
           </button>
         ) : (
           <button className="navbar__mobile-cta" style={{ background: 'var(--grey-200)', color: 'var(--grey-800)' }} onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
