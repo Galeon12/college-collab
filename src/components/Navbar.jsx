@@ -16,6 +16,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+  
+  const userInitial = user?.name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -48,6 +50,20 @@ export default function Navbar() {
             </button>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '16px' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                background: 'var(--crimson)',
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                fontSize: '18px'
+              }}>
+                {userInitial}
+              </div>
               <button className="navbar__cta" style={{ background: 'var(--grey-200)', color: 'var(--grey-800)' }} onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
                 Log Out
               </button>
@@ -77,9 +93,25 @@ export default function Navbar() {
             Signup/Login
           </button>
         ) : (
-          <button className="navbar__mobile-cta" style={{ background: 'var(--grey-200)', color: 'var(--grey-800)' }} onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%', marginTop: '16px' }}>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '50%',
+              background: 'var(--crimson)',
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 'bold',
+              fontSize: '20px'
+            }}>
+              {userInitial}
+            </div>
+            <button className="navbar__mobile-cta" style={{ background: 'var(--grey-200)', color: 'var(--grey-800)' }} onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
             Log Out
           </button>
+        </div>
         )}
       </div>
     </nav>
