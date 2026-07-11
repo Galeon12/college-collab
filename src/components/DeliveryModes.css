@@ -99,10 +99,10 @@
   font-weight: 700;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .delivery__grid {
     grid-template-columns: 1fr;
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
   }
 }

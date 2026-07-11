@@ -212,7 +212,7 @@
   }
 
   .pricing__card {
-    min-width: 85vw;
+    min-width: 80vw;
     scroll-snap-align: center;
   }
 

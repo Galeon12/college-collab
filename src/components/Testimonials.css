@@ -136,7 +136,7 @@
 
 @media (max-width: 480px) {
   .testimonials__card {
-    min-width: calc(100vw - 64px);
-    max-width: calc(100vw - 64px);
+    min-width: calc(100vw - var(--site-padding) * 2 - 24px);
+    max-width: calc(100vw - var(--site-padding) * 2 - 24px);
   }
 }

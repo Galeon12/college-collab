@@ -95,6 +95,7 @@
   /* Layout */
   --max-width: 1280px;
   --nav-height: 72px;
+  --site-padding: 32px;
 }
 
 /* ─── Base Styles ─── */
@@ -152,7 +153,7 @@ ol {
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 clamp(24px, 5vw, 180px);
+  padding: 0 var(--site-padding);
 }
 
 .section-padding {
@@ -365,9 +366,6 @@ ol {
   :root {
     --space-4xl: 64px;
     --space-3xl: 48px;
-  }
-
-  .container {
-    padding: 0 var(--space-md);
+    --site-padding: 16px;
   }
 }

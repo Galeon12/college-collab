@@ -57,7 +57,7 @@
 .roadmap__canvas-wrap {
   position: relative;
   width: 100%;
-  max-width: 1280px;
+  max-width: var(--max-width);
   margin: 0 auto;
   aspect-ratio: 1280 / 600;
 }
@@ -139,10 +139,10 @@
 }
 
 /* ─── Responsive (Mobile Fallback) ─── */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .roadmap__container {
     overflow-x: hidden;
-    padding: 0 var(--space-md);
+    padding: 0 var(--site-padding);
   }
 
   .roadmap__canvas-wrap {

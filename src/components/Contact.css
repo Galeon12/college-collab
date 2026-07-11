@@ -221,7 +221,7 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .contact__inner {
     flex-direction: column;
   }

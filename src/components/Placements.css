@@ -219,7 +219,7 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .placements__stats {
     grid-template-columns: repeat(2, 1fr);
   }
