@@ -22,16 +22,26 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please sign up or log in first to submit your consultation request!');
+      window.dispatchEvent(new CustomEvent('openAuthModal', { detail: { mode: 'signup' } }));
+      return;
+    }
+
     setIsSubmitting(true);
     setStatusMsg('');
     setStatusType('');
 
     try {
       // 1. Save to MongoDB via Backend API
-      const response = await fetch('https://college-collab-er2l.onrender.com/api/applications', {
+      const response = await fetch('http://localhost:5000/api/applications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify(formData),
       });

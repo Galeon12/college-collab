@@ -2,6 +2,52 @@ import { useState, useEffect, useRef } from 'react';
 import { CURRICULUM_PLANS, PLAN_KEYS } from '../data';
 import './TrainingModule.css';
 
+function TopicCard({ item }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="tm-topic-card">
+      <div 
+        className="tm-topic-card__name" 
+        onClick={() => item.dropdownList && setExpanded(!expanded)}
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', cursor: item.dropdownList ? 'pointer' : 'default' }}
+      >
+        <span>{item.title}</span>
+        {item.dropdownList && (
+          <span style={{ 
+            transform: expanded ? 'rotate(180deg)' : 'none', 
+            transition: 'transform 0.2s', 
+            fontSize: '12px',
+            color: 'var(--crimson)',
+            marginTop: '2px'
+          }}>
+            ▼
+          </span>
+        )}
+      </div>
+      {item.bullets ? (
+        <ul className="tm-topic-card__bullets">
+          {item.bullets.map((b, i) => <li key={i}>{b}</li>)}
+        </ul>
+      ) : (
+        <div className="tm-topic-card__desc">{item.desc}</div>
+      )}
+      
+      {item.dropdownList && expanded && (
+        <div className="tm-topic-card__dropdown" style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--grey-200)', animation: 'fadeIn 0.2s ease-out' }}>
+          <ul style={{ listStyleType: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'var(--grey-700)', display: 'grid', gridTemplateColumns: '1fr', gap: '6px' }}>
+            {item.dropdownList.map((topic, i) => (
+              <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ color: 'var(--crimson)' }}>•</span> {topic}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Phase Card ──────────────────────────────────────────────────────────────
 function PhaseCard({ phase, index, isVisible, isLast }) {
   const trackRef = useRef(null);
@@ -27,7 +73,6 @@ function PhaseCard({ phase, index, isVisible, isLast }) {
           <div className="tm-phase__title">{phase.title}</div>
           <div className="tm-phase__dash"></div>
           <div className="tm-phase__tag">{phase.tag}</div>
-
         </div>
 
         {hasMore && (
@@ -51,16 +96,7 @@ function PhaseCard({ phase, index, isVisible, isLast }) {
 
         <div className="tm-phase__items" ref={trackRef}>
           {phase.items.map((item, j) => (
-            <div key={j} className="tm-topic-card">
-              <div className="tm-topic-card__name">{item.title}</div>
-              {item.bullets ? (
-                <ul className="tm-topic-card__bullets">
-                  {item.bullets.map((b, i) => <li key={i}>{b}</li>)}
-                </ul>
-              ) : (
-                <div className="tm-topic-card__desc">{item.desc}</div>
-              )}
-            </div>
+            <TopicCard key={j} item={item} />
           ))}
         </div>
       </div>

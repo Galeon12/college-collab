@@ -35,9 +35,24 @@
   gap: var(--space-xl);
 }
 
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  gap: 12px;
+}
+
 .navlogo{
   width:180px;
   height :auto;
+}
+
+.navbar__logo-text {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.5px;
 }
 .navbar__link {
   font-family: var(--font-body);
@@ -69,6 +84,17 @@
   background: var(--crimson-dark);
   transform: translateY(-1px);
   box-shadow: var(--shadow-crimson);
+}
+
+.navbar__logout {
+  background: var(--grey-200);
+  color: var(--grey-800);
+}
+
+.navbar__logout:hover {
+  background: var(--crimson) !important;
+  color: var(--white) !important;
+  box-shadow: var(--shadow-crimson) !important;
 }
 
 .navbar__mobile-toggle {

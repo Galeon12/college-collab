@@ -11,11 +11,13 @@ export const CURRICULUM_PLANS = {
     phases: [
       {
         num: 1,
-        title: 'Mastering the OA & AI Fundamentals',
+        title: 'Mastering the OA',
         tag: 'Foundation',
         items: [
-          { title: 'DSA Deep Dive', bullets: ['Pattern-by-pattern coverage of every major data structure and algorithm.'] },
-          { title: 'Competitive Programming', bullets: ['Structured profile-building on Codeforces.'] }
+          { title: 'DSA Deep Dive', bullets: ['Pattern-by-pattern coverage of every major data structure and algorithm.'], dropdownList: ['Arrays & Hashing', 'Two Pointers', 'Sliding Window', 'Stack & Queue', 'Binary Search', 'Linked List', 'Trees & BST', 'Tries', 'Heap / Priority Queue', 'Backtracking', 'Graphs', 'Advanced Graphs', '1-D Dynamic Programming', '2-D Dynamic Programming'] },
+          { title: 'Competitive Programming', bullets: ['Structured profile-building on Codeforces.'] },
+          { title: 'Weekly Problem Bunch', bullets: ['A problem bunch after every class followed by doubt sessions to concrete your concepts.'] },
+          { title: 'Coding Round Simulations', bullets: ['Coding-round simulations every 2 weeks that mirror the coding rounds of top-tech companies.'] }
         ],
       },
       {
@@ -70,11 +72,13 @@ export const CURRICULUM_PLANS = {
     phases: [
       {
         num: 1,
-        title: 'Mastering the OA & Fundamentals',
+        title: 'Mastering the OA',
         tag: 'Foundation',
         items: [
-          { title: 'Intensive DSA & CP', bullets: ['Pattern-by-pattern coverage of every major data structure and algorithm.'] },
+          { title: 'Intensive DSA & CP', bullets: ['Pattern-by-pattern coverage of every major data structure and algorithm.'], dropdownList: ['Arrays & Hashing', 'Two Pointers', 'Sliding Window', 'Stack & Queue', 'Binary Search', 'Linked List', 'Trees & BST', 'Tries', 'Heap / Priority Queue', 'Backtracking', 'Graphs', 'Advanced Graphs', '1-D Dynamic Programming', '2-D Dynamic Programming'] },
           { title: '80-problem AlgoPath Capsule', bullets: ['Curated, structured problem set timed for placement season.'] },
+          { title: 'Weekly Problem Bunch', bullets: ['A problem bunch after every class followed by doubt sessions to concrete your concepts.'] },
+          { title: 'Coding Round Simulations', bullets: ['Coding-round simulations every 2 weeks that mirror the coding rounds of top-tech companies.'] }
         ],
       },
       {
@@ -125,12 +129,14 @@ export const CURRICULUM_PLANS = {
     phases: [
       {
         num: 1,
-        title: 'Mastering the OA & AI Fundamentals',
+        title: 'Mastering the OA',
         tag: 'Foundation',
         items: [
-          { title: 'Advanced DSA & Competitive Programming', bullets: ['Codeforces profile building - the language top companies speak.'] },
+          { title: 'Advanced DSA & Competitive Programming', bullets: ['Codeforces profile building - the language top companies speak.'], dropdownList: ['Arrays & Hashing', 'Two Pointers', 'Sliding Window', 'Stack & Queue', 'Binary Search', 'Linked List', 'Trees & BST', 'Tries', 'Heap / Priority Queue', 'Backtracking', 'Graphs', 'Advanced Graphs', '1-D Dynamic Programming', '2-D Dynamic Programming'] },
           { title: 'AI Engineer Fundamentals', bullets: ['Core ML/AI concepts for roles at AI-first companies.'] },
           { title: '80-problem AlgoPath + Extensions', bullets: ['Full capsule plus hard/expert-level extension problems.'] },
+          { title: 'Weekly Problem Bunch', bullets: ['A problem bunch after every class followed by doubt sessions to concrete your concepts.'] },
+          { title: 'Coding Round Simulations', bullets: ['Coding-round simulations every 2 weeks that mirror the coding rounds of top-tech companies.'] }
         ],
       },
       {

@@ -14,3 +14,4 @@ export { default as Certificate } from './Certificate';
 export { default as FAQ } from './FAQ';
 export { default as Contact } from './Contact';
 export { default as QuirkyBackgrounds } from './QuirkyBackgrounds';
+export { default as AuthModal } from './AuthModal';

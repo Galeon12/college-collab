@@ -6,52 +6,45 @@ import './Roadmap.css';
 const ROADMAP_STEPS = [
   {
     id: 1,
-    title: 'Onboarding & Assessment',
-    desc: 'Diagnostic test, skill gap analysis, personalised learning plan setup.',
-    icon: '🎯',
-    color: '#6366f1',
-  },
-  {
-    id: 2,
-    title: 'Fundamentals - DSA & CP',
-    desc: 'Data Structures, Algorithms, Competitive Programming patterns.',
+    title: '1. Fundamentals - DSA & CP',
+    desc: 'Data Structures, Algorithms, Competitive Programming, dsa.',
     icon: '🧠',
     color: '#ef4444',
   },
   {
+    id: 2,
+    title: '2. Weekly Problem Bunch',
+    desc: 'A problem bunch after every class followed by doubt sessions to concrete your concepts.',
+    icon: '💻',
+    color: '#6366f1',
+  },
+  {
     id: 3,
-    title: 'System Design',
-    desc: 'Low-Level Design (LLD) and High-Level Design (HLD).',
+    title: '3. Coding Round Simulations',
+    desc: 'Coding-round simulations every 2 weeks that mirror the coding rounds of top-tech companies.',
     icon: '⚙️',
     color: '#f97316',
   },
   {
     id: 4,
-    title: 'Full Stack Dev',
-    desc: 'Build scalable applications using modern web frameworks.',
-    icon: '💻',
-    color: '#eab308',
-  },
-  {
-    id: 5,
-    title: 'CS Core Fundamentals',
-    desc: 'Operating Systems, DBMS, and Computer Networks.',
+    title: '4. Full Stack Development & System Design',
+    desc: 'Build industry-level capstone project',
     icon: '📚',
     color: '#22c55e',
   },
   {
-    id: 6,
-    title: 'Interview Mastery',
-    desc: 'Mock interviews with FAANG engineers, resume reviews.',
-    icon: '🏆',
-    color: '#06b6d4',
-  },
-  {
-    id: 7,
-    title: 'Placement & Beyond',
-    desc: 'Live hiring drives, direct referrals, offer negotiation.',
+    id: 5,
+    title: '5. Interview Mastery',
+    desc: 'Mock interviews with FAANG engineers, company specific PYQs, resume reviews.',
     icon: '🚀',
     color: '#8b5cf6',
+  },
+  {
+    id: 6,
+    title: '6. Get A SDE Role',
+    desc: 'Live hiring drives, direct referrals, offer negotiation.',
+    icon: '🏆',
+    color: '#06b6d4',
   },
 ];
 
@@ -61,7 +54,7 @@ const VW = 1280;
 const TOP_Y = 200;
 const BOT_Y = 400;
 
-function nodeX(idx) { return 100 + idx * 180; }
+function nodeX(idx) { return 140 + idx * 200; }
 function nodeY(idx) { return idx % 2 === 0 ? TOP_Y : BOT_Y; }
 
 // Build a smooth cubic‑bezier path through all 5 node centres.
