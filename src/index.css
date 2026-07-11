@@ -152,7 +152,7 @@ ol {
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 clamp(32px, 8vw, 180px);
+  padding: 0 clamp(24px, 5vw, 180px);
 }
 
 .section-padding {

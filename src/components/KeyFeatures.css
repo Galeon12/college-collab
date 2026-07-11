@@ -270,7 +270,7 @@
 /* ════════════════════════════════════════════════
    RESPONSIVE
    ════════════════════════════════════════════════ */
-@media (max-width: 960px) {
+@media (max-width: 1100px) {
   .kf-row, .kf-row--reverse {
     flex-direction: column;
     gap: var(--space-2xl);
