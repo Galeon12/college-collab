@@ -3,9 +3,8 @@ import { createPortal } from 'react-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useAuth0 } from '@auth0/auth0-react';
 import { COUNTRIES } from '../data/countries';
+import { API_BASE_URL, RECAPTCHA_SITE_KEY } from '../config';
 import './AuthModal.css';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function AuthModal({ isOpen, onClose, initialMode = 'signup' }) {
   const [mode, setMode] = useState(initialMode); // 'signup' | 'login' | 'googleSignup'
@@ -16,7 +15,6 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup' }) {
 
   // ReCAPTCHA ref
   const recaptchaRef = useRef(null);
-  const RECAPTCHA_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 
   // Form states
   const [formData, setFormData] = useState({

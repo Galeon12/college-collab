@@ -1,36 +1,63 @@
+// Must precede ./db/airtable.js, which reads process.env at load time.
+import { IS_PRODUCTION, allowedOrigins, config } from './env.js';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import airtableDb from './db/airtable.js';
+import storage from './db/airtable.js';
+import { initSpool, appendToSpool, spoolDepth } from './db/spool.js';
+import { startDrainer } from './db/drain.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-dotenv.config();
-
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+/**
+ * Guards the check-then-create window on application submits.
+ *
+ * findApplicationByEmail -> createApplication is a TOCTOU race, and Airtable has no unique
+ * constraint to fall back on. Holding the email for the duration of the window closes the
+ * realistic race: a double-clicked submit button, or two tabs.
+ *
+ * LIMIT: in-process only. It reduces duplicates, it does not eliminate them, and it stops
+ * working across more than one server instance. That is the honest ceiling of running
+ * without a real database.
+ */
+const inFlightEmails = new Set();
+
+async function withEmailLock(email, fn) {
+  const key = email.trim().toLowerCase();
+
+  if (inFlightEmails.has(key)) {
+    const error = new Error('A submission for this email is already being processed.');
+    error.code = 'DUPLICATE_IN_FLIGHT';
+    throw error;
+  }
+
+  inFlightEmails.add(key);
+  try {
+    return await fn();
+  } finally {
+    inFlightEmails.delete(key);
+  }
+}
 
 // Middleware
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    if (/^http:\/\/localhost:\d+$/.test(origin) || /^http:\/\/127\.0\.0\.1:\d+$/.test(origin)) {
+    if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    if (origin.endsWith('vercel.app')) {
+    if (!IS_PRODUCTION && /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)) {
       return callback(null, true);
     }
-    // You can add your custom domain here later
-    // if (origin === 'https://yourcustomdomain.com') return callback(null, true);
-    
+
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true
 }));
 app.use(express.json());
-
-// Airtable Connection is handled inside db/airtable.js
 
 // Routes
 app.get('/', (req, res) => {
@@ -46,54 +73,84 @@ const requireAuth = (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
-    req.userId = decoded.id;
+    jwt.verify(token, process.env.JWT_SECRET);
     next();
   } catch (error) {
     return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
   }
 };
 
+// Applicant records are PII, so listing them takes a separate operator credential
+// rather than any signed-in user's token.
+const requireAdmin = (req, res, next) => {
+  const adminKey = req.headers['x-admin-key'];
+  if (!adminKey || adminKey !== process.env.ADMIN_API_KEY) {
+    return res.status(403).json({ success: false, message: 'Forbidden.' });
+  }
+  next();
+};
+
 // Submit Application
 app.post('/api/applications', requireAuth, async (req, res) => {
-  try {
-    const { name, college, email, phone, message } = req.body;
+  const { name, college, email, phone, message } = req.body;
 
-    // Basic validation
-    if (!name || !college || !email) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Name, college, and email are required fields.' 
-      });
-    }
-
-    // Check if an application with this email already exists
-    const existingApplication = await airtableDb.findApplicationByEmail(email);
-    if (existingApplication) {
-      return res.status(400).json({
-        success: false,
-        message: 'An application with this email address has already been submitted.'
-      });
-    }
-
-    const newApplication = await airtableDb.createApplication({
-      name,
-      college,
-      email,
-      phone,
-      message,
+  // Basic validation
+  if (!name || !college || !email) {
+    return res.status(400).json({
+      success: false,
+      message: 'Name, college, and email are required fields.'
     });
-    
-    console.log(`Saved new application: ${name} (${college})`);
-    
-    return res.status(201).json({
-      success: true,
-      message: 'Application submitted successfully!',
-      data: newApplication
+  }
+
+  const application = { name, college, email, phone, message };
+
+  try {
+    return await withEmailLock(email, async () => {
+      // Check if an application with this email already exists
+      const existingApplication = await storage.findApplicationByEmail(email);
+      if (existingApplication) {
+        return res.status(400).json({
+          success: false,
+          message: 'An application with this email address has already been submitted.'
+        });
+      }
+
+      const newApplication = await storage.createApplication(application);
+      console.log(`Saved new application: ${name} (${college})`);
+
+      return res.status(201).json({
+        success: true,
+        message: 'Application submitted successfully!',
+        data: newApplication
+      });
     });
   } catch (error) {
-    console.error('Error saving application:', error);
-    
+    if (error.code === 'DUPLICATE_IN_FLIGHT') {
+      return res.status(409).json({
+        success: false,
+        message: 'This application is already being submitted. Please wait a moment.'
+      });
+    }
+
+    console.error('Airtable write failed for application:', error.message);
+
+    // Airtable is unreachable, throttled, or broken. Spool the submission so it is not lost,
+    // and tell the applicant we have it — because we do. The drainer will land it in Airtable
+    // shortly. Answering with an error here would be a lie AND would provoke a re-submit.
+    try {
+      const entry = await appendToSpool({ op: 'createApplication', payload: application });
+      console.warn(`Spooled application ${entry.id} (${email}) for retry`);
+
+      return res.status(202).json({
+        success: true,
+        message: 'Application received!'
+      });
+    } catch (spoolError) {
+      console.error('SPOOL WRITE FAILED — APPLICATION LOST:', spoolError.message);
+      // Last resort: the payload is in the logs, which is the only copy left.
+      console.error('Lost payload:', JSON.stringify(application));
+    }
+
     return res.status(500).json({
       success: false,
       message: 'An error occurred while saving the application. Please try again.'
@@ -115,8 +172,7 @@ app.post('/api/auth/signup', async (req, res) => {
     }
 
     // Verify reCAPTCHA token with Google
-    const recaptchaSecret = process.env.RECAPTCHA_SECRET || '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
-    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${captchaToken}`;
+    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET}&response=${captchaToken}`;
     
     const recaptchaRes = await fetch(verifyUrl, { method: 'POST' });
     const recaptchaData = await recaptchaRes.json();
@@ -125,7 +181,7 @@ app.post('/api/auth/signup', async (req, res) => {
       return res.status(400).json({ success: false, message: 'reCAPTCHA verification failed.' });
     }
 
-    const existingUser = await airtableDb.findUserByEmail(email);
+    const existingUser = await storage.findUserByEmail(email);
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'User with this email already exists.' });
     }
@@ -133,7 +189,7 @@ app.post('/api/auth/signup', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = await airtableDb.createUser({
+    const newUser = await storage.createUser({
       fullName,
       email: email.toLowerCase(),
       phone,
@@ -143,7 +199,7 @@ app.post('/api/auth/signup', async (req, res) => {
       password: hashedPassword
     });
 
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET || 'fallback_secret', { expiresIn: '7d' });
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
     res.status(201).json({
       success: true,
@@ -163,17 +219,18 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Email and password are required.' });
     }
 
-    const user = await airtableDb.findUserByEmail(email);
+    // The only route that reads the hash, and the only one that may call this.
+    const user = await storage.findUserCredentialsByEmail(email);
     if (!user) {
       return res.status(400).json({ success: false, message: 'Invalid credentials.' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
       return res.status(400).json({ success: false, message: 'Invalid credentials.' });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'fallback_secret', { expiresIn: '7d' });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
     res.json({
       success: true,
@@ -189,7 +246,7 @@ app.post('/api/auth/login', async (req, res) => {
 // Auth0 JWKS setup for Google verification
 import jwksClient from 'jwks-rsa';
 const client = jwksClient({
-  jwksUri: `https://dev-7bxpsukdfilcicqi.us.auth0.com/.well-known/jwks.json`
+  jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`
 });
 
 function getKey(header, callback) {
@@ -221,11 +278,11 @@ app.post('/api/auth/google', async (req, res) => {
         return res.status(400).json({ success: false, message: 'Email not provided by Google.' });
       }
 
-      let user = await airtableDb.findUserByEmail(email);
+      let user = await storage.findUserByEmail(email);
 
       // If user exists, log them in
       if (user) {
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'fallback_secret', { expiresIn: '7d' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
         return res.json({
           success: true,
           token,
@@ -248,7 +305,7 @@ app.post('/api/auth/google', async (req, res) => {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(randomPassword, salt);
 
-      user = await airtableDb.createUser({
+      user = await storage.createUser({
         fullName: name,
         email: email.toLowerCase(),
         phone,
@@ -258,7 +315,7 @@ app.post('/api/auth/google', async (req, res) => {
         password: hashedPassword
       });
 
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'fallback_secret', { expiresIn: '7d' });
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
       return res.status(201).json({
         success: true,
         token,
@@ -272,10 +329,13 @@ app.post('/api/auth/google', async (req, res) => {
   }
 });
 
-// Get all applications (Helper route for admin/developer check)
-app.get('/api/applications', async (req, res) => {
+// Get all applications (admin only — returns applicant PII).
+// Returns every row, newest first. No limit/pagination on purpose: a default cap would
+// silently truncate the operator's view of their own applicants with no signal that rows
+// were dropped, which is worse than a large response.
+app.get('/api/applications', requireAdmin, async (req, res) => {
   try {
-    const applications = await airtableDb.getAllApplications();
+    const applications = await storage.getAllApplications();
     return res.json({ success: true, count: applications.length, data: applications });
   } catch (error) {
     console.error('Error fetching applications:', error);
@@ -283,7 +343,16 @@ app.get('/api/applications', async (req, res) => {
   }
 });
 
-// Removed test-email route as we are moving to EmailJS
+// Operational health. Also gated: spool depth leaks how badly Airtable is failing.
+app.get('/api/health', requireAdmin, async (req, res) => {
+  return res.json({
+    success: true,
+    spool: {
+      dir: config.SPOOL_DIR,
+      pending: await spoolDepth(),
+    },
+  });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -291,6 +360,11 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: 'Something went wrong on the server!' });
 });
 
+// The spool must be proven writable BEFORE we accept traffic — in production a failed probe
+// exits. Accepting submissions with no safety net is how you lose the one you meant to save.
+await initSpool();
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
+  startDrainer(storage);
 });
