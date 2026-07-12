@@ -1,9 +1,7 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import Application from './models/Application.js';
-import User from './models/User.js';
+import airtableDb from './db/airtable.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -32,24 +30,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  console.error('FATAL ERROR: MONGODB_URI is not defined in environment variables.');
-  process.exit(1);
-}
-
-console.log('Connecting to MongoDB Atlas...');
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => {
-    console.log('Successfully connected to MongoDB Atlas!');
-  })
-  .catch((err) => {
-    console.error('Failed to connect to MongoDB Atlas:', err.message);
-    console.log('TIP: Check if your current IP Address is whitelisted in MongoDB Atlas Network Access settings.');
-  });
+// Airtable Connection is handled inside db/airtable.js
 
 // Routes
 app.get('/', (req, res) => {
@@ -87,7 +68,7 @@ app.post('/api/applications', requireAuth, async (req, res) => {
     }
 
     // Check if an application with this email already exists
-    const existingApplication = await Application.findOne({ email: email.toLowerCase() });
+    const existingApplication = await airtableDb.findApplicationByEmail(email);
     if (existingApplication) {
       return res.status(400).json({
         success: false,
@@ -95,15 +76,13 @@ app.post('/api/applications', requireAuth, async (req, res) => {
       });
     }
 
-    const newApplication = new Application({
+    const newApplication = await airtableDb.createApplication({
       name,
       college,
       email,
       phone,
       message,
     });
-
-    await newApplication.save();
     
     console.log(`Saved new application: ${name} (${college})`);
     
@@ -115,17 +94,6 @@ app.post('/api/applications', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Error saving application:', error);
     
-    // Mongoose Validation Error
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(val => val.message);
-      return res.status(400).json({ success: false, message: messages.join(', ') });
-    }
-    
-    // Mongoose Duplicate Key Error (fallback for race conditions)
-    if (error.code === 11000) {
-      return res.status(400).json({ success: false, message: 'An application with this email address has already been submitted.' });
-    }
-
     return res.status(500).json({
       success: false,
       message: 'An error occurred while saving the application. Please try again.'
@@ -157,7 +125,7 @@ app.post('/api/auth/signup', async (req, res) => {
       return res.status(400).json({ success: false, message: 'reCAPTCHA verification failed.' });
     }
 
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    const existingUser = await airtableDb.findUserByEmail(email);
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'User with this email already exists.' });
     }
@@ -165,7 +133,7 @@ app.post('/api/auth/signup', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new User({
+    const newUser = await airtableDb.createUser({
       fullName,
       email: email.toLowerCase(),
       phone,
@@ -174,8 +142,6 @@ app.post('/api/auth/signup', async (req, res) => {
       designation,
       password: hashedPassword
     });
-
-    await newUser.save();
 
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET || 'fallback_secret', { expiresIn: '7d' });
 
@@ -197,7 +163,7 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Email and password are required.' });
     }
 
-    const user = await User.findOne({ email: email.toLowerCase() });
+    const user = await airtableDb.findUserByEmail(email);
     if (!user) {
       return res.status(400).json({ success: false, message: 'Invalid credentials.' });
     }
@@ -255,7 +221,7 @@ app.post('/api/auth/google', async (req, res) => {
         return res.status(400).json({ success: false, message: 'Email not provided by Google.' });
       }
 
-      let user = await User.findOne({ email: email.toLowerCase() });
+      let user = await airtableDb.findUserByEmail(email);
 
       // If user exists, log them in
       if (user) {
@@ -282,7 +248,7 @@ app.post('/api/auth/google', async (req, res) => {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(randomPassword, salt);
 
-      user = new User({
+      user = await airtableDb.createUser({
         fullName: name,
         email: email.toLowerCase(),
         phone,
@@ -291,8 +257,6 @@ app.post('/api/auth/google', async (req, res) => {
         designation,
         password: hashedPassword
       });
-
-      await user.save();
 
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'fallback_secret', { expiresIn: '7d' });
       return res.status(201).json({
@@ -311,7 +275,7 @@ app.post('/api/auth/google', async (req, res) => {
 // Get all applications (Helper route for admin/developer check)
 app.get('/api/applications', async (req, res) => {
   try {
-    const applications = await Application.find().sort({ createdAt: -1 });
+    const applications = await airtableDb.getAllApplications();
     return res.json({ success: true, count: applications.length, data: applications });
   } catch (error) {
     console.error('Error fetching applications:', error);

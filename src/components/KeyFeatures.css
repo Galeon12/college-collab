@@ -244,12 +244,16 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
   z-index: 5;
   background: rgba(255, 255, 255, 0.8);
   padding: 8px 12px;
   border-radius: 100px;
   backdrop-filter: blur(4px);
+  width: max-content;
+  max-width: 90%;
 }
 
 .kf-card__dot {
@@ -273,6 +277,7 @@
 @media (max-width: 1100px) {
   .kf-row, .kf-row--reverse {
     flex-direction: column;
+    align-items: stretch; /* Prevents children from collapsing to 0 width */
     gap: var(--space-2xl);
   }
 
@@ -280,11 +285,21 @@
     align-items: flex-start;
     text-align: left;
   }
+  
+  .kf-row__media {
+    width: 100%; /* Ensure media wrapper takes full width */
+  }
 
   .kf-media-card {
-    transform: none !important;
-    max-width: 100%;
+    transform: translateZ(0) !important; /* Fix Safari iOS overflow bug */
+    -webkit-mask-image: -webkit-radial-gradient(white, black); /* Fix Safari border-radius clipping */
+    max-width: 100% !important; /* Override the 420px portrait max-width so it's responsive */
     aspect-ratio: 16/9;
+  }
+  
+  /* On mobile, let's keep portrait cards at a reasonable aspect ratio like 4/3 or 1/1 so they don't stretch */
+  .kf-media-card--portrait {
+    aspect-ratio: 4/3 !important;
   }
   
   .kf-row__title {
