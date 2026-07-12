@@ -38,7 +38,7 @@ export default function Contact() {
 
     try {
       // 1. Save via Backend API (Airtable). A 202 means it was accepted into the retry
-      //    spool rather than written immediately — still a success from the user's side.
+      //    spool rather than written immediately -- still a success from the user's side.
       const response = await fetch(`${API_BASE_URL}/api/applications`, {
         method: 'POST',
         headers: {

@@ -14,7 +14,7 @@ dist-ssr
 .env
 
 # Lockfiles are not tracked. Note this means `npm ci` will not work on a fresh
-# clone (it requires a lockfile) — use `npm install`.
+# clone (it requires a lockfile) -- use `npm install`.
 package-lock.json
 
 # Internal working directory: notes, scratch scripts. Not part of the build.

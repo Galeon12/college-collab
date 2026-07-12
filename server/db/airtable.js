@@ -7,7 +7,7 @@ const base = new Airtable({
   // The SDK defaults to 300s. That is not a timeout, it's a hang.
   requestTimeout: config.AIRTABLE_TIMEOUT_MS,
   // The SDK retries 429 with no attempt ceiling, backing off toward 10 minutes. We do our
-  // own bounded retry in ./retry.js — leaving this off would hang requests indefinitely.
+  // own bounded retry in ./retry.js -- leaving this off would hang requests indefinitely.
   noRetryIfRateLimited: true,
 }).base(process.env.AIRTABLE_BASE_ID);
 
@@ -15,16 +15,21 @@ const USERS_TABLE = process.env.AIRTABLE_TABLE_USERS || 'Users';
 const APPS_TABLE = process.env.AIRTABLE_TABLE_APPLICATIONS || 'Applications';
 
 /**
- * Airtable matches field names literally and case-sensitively — a mismatch is a 422, which we
+ * Airtable matches field names literally and case-sensitively -- a mismatch is a 422, which we
  * classify as permanent and dead-letter. The literals written below are the contract with the
  * base; renaming a column in the Airtable UI without changing them here breaks writes.
  *
  * Watch the casing: the Users table uses `isWhatsapp` with a LOWERCASE 'a'.
  */
 
-/** Escapes single quotes to prevent formula injection when querying by email. */
+/**
+ * Escapes a value interpolated into a filterByFormula string literal.
+ *
+ * Backslashes must be escaped FIRST. Escaping quotes first would turn an input backslash into
+ * the escape character for the quote we just added, letting the value break out of the literal.
+ */
 function escapeFormulaValue(value) {
-  return value.replace(/'/g, "\\'");
+  return value.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
 /** Airtable record -> the `{ _id, ...fields }` shape the routes expect (a Mongoose leftover). */
@@ -51,7 +56,7 @@ async function findByEmail(table, email) {
 // ==========================================
 
 /**
- * Never returns the password hash — the Airtable record carries it, and spreading the raw
+ * Never returns the password hash -- the Airtable record carries it, and spreading the raw
  * fields is how it would end up on the wire. Login reads it via findUserCredentialsByEmail.
  */
 export const findUserByEmail = async (email) => {
@@ -63,7 +68,7 @@ export const findUserByEmail = async (email) => {
 };
 
 /**
- * The only way to get the password hash — and it hands it back under an explicit
+ * The only way to get the password hash -- and it hands it back under an explicit
  * `passwordHash` key rather than smuggling it inside the spread fields, so no caller
  * can leak it by accident. Used solely by POST /api/auth/login.
  */
@@ -82,7 +87,7 @@ export const createUser = async (userData) => {
         fullName: userData.fullName,
         email: userData.email.toLowerCase(),
         phone: userData.phone,
-        isWhatsapp: userData.isWhatsapp || false,   // lowercase 'a' — see airtable-schema.md
+        isWhatsapp: userData.isWhatsapp || false,   // lowercase 'a' -- see airtable-schema.md
         institution: userData.institution,
         designation: userData.designation,
         password: userData.password,

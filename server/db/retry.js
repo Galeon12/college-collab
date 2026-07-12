@@ -1,13 +1,13 @@
 /**
  * The Airtable SDK's own retry is disarmed (noRetryIfRateLimited in airtable.js), because
- * it retries 429 with NO attempt ceiling and a backoff ramping to 10 minutes — a throttled
+ * it retries 429 with NO attempt ceiling and a backoff ramping to 10 minutes -- a throttled
  * write would hang the request rather than fail. It also retries *only* 429: 5xx, network
  * faults and its own timeout are rejected on the first try. So we own retry entirely.
  */
 
 /**
  * Statuses where a retry provably cannot help: the request itself is wrong.
- * 422 covers UNKNOWN_FIELD_NAME / INVALID_VALUE_FOR_COLUMN — retrying a schema mismatch just
+ * 422 covers UNKNOWN_FIELD_NAME / INVALID_VALUE_FOR_COLUMN -- retrying a schema mismatch just
  * burns the rate limit before failing identically. 401/403 are bad credentials; 404 is a bad
  * base or table name.
  *
@@ -16,8 +16,8 @@
 const PERMANENT_STATUS = new Set([400, 401, 403, 404, 413, 422]);
 
 /**
- * Only an error Airtable explicitly rejected is permanent. Everything else — a timeout, a
- * dropped connection, a DNS failure, an error shape we've never seen — is treated as transient.
+ * Only an error Airtable explicitly rejected is permanent. Everything else -- a timeout, a
+ * dropped connection, a DNS failure, an error shape we've never seen -- is treated as transient.
  *
  * The polarity matters and is not arbitrary. Misjudging a transient failure as permanent sends
  * a real applicant's submission straight to the dead-letter file; misjudging a permanent failure
@@ -47,7 +47,7 @@ const RETRY_BUDGET_MS = 8_000;
  * Retries `fn` on transient Airtable failures with full-jitter exponential backoff.
  *
  * Bounded twice over: by attempt count and by a wall-clock budget. The budget check happens
- * *before* sleeping, so we never begin a backoff we don't have time to finish — an important
+ * *before* sleeping, so we never begin a backoff we don't have time to finish -- an important
  * property when the caller is an HTTP request an applicant is waiting on.
  *
  * A throttled write is EXPECTED to exhaust the budget and throw, so the caller can spool it.
@@ -74,7 +74,7 @@ export async function withRetry(fn, {
 
       if (Date.now() + delay >= deadline) throw error;
 
-      // A timed-out request has no .error and no .statusCode, only a name — so fall through
+      // A timed-out request has no .error and no .statusCode, only a name -- so fall through
       // to it, otherwise every timeout logs as "unknown" and the cause is invisible.
       const cause = error?.error || error?.statusCode || error?.name || 'unknown';
       console.warn(

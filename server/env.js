@@ -45,7 +45,7 @@ function parseIntEnv(key, fallback, { min, max }) {
 
 /**
  * Only two knobs are environment-dependent. Everything else about the retry and spool
- * behaviour is a constant living next to the code that uses it — a value nobody would ever
+ * behaviour is a constant living next to the code that uses it -- a value nobody would ever
  * set in anger is not configuration, it is a constant with extra steps and one more way to
  * misconfigure production.
  */

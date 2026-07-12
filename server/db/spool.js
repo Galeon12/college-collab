@@ -16,14 +16,18 @@ import { config, IS_PRODUCTION } from '../env.js';
  * genuinely durable here with zero new infrastructure.
  *
  * LIMIT: the single-writer chain below assumes ONE process on ONE instance. Scale App Service
- * past a single instance and this breaks — you would need a real queue instead.
+ * past a single instance and this breaks; you would need a real queue instead.
  */
 
 const SPOOL_FILE = path.join(config.SPOOL_DIR, 'failed-writes.jsonl');
 const DEAD_LETTER_FILE = path.join(config.SPOOL_DIR, 'dead-letter.jsonl');
+const CORRUPT_FILE = path.join(config.SPOOL_DIR, 'corrupt.jsonl');
 
 // Serializes all writes through one promise chain so two concurrent requests can never
 // interleave a partial line into the JSONL.
+//
+// Do NOT call serialize() from inside work already running under serialize(): the inner call
+// would await the very chain link it is part of, and deadlock.
 let writeChain = Promise.resolve();
 
 function serialize(work) {
@@ -76,6 +80,10 @@ export async function appendToDeadLetter(entry) {
   await serialize(() => fs.appendFile(DEAD_LETTER_FILE, `${JSON.stringify(entry)}\n`));
 }
 
+/**
+ * Reads a JSONL file. Runs raw (not under serialize) because callers may already hold the
+ * chain -- see reconcileSpool.
+ */
 async function readJsonl(file) {
   let contents;
   try {
@@ -85,34 +93,62 @@ async function readJsonl(file) {
     throw error;
   }
 
-  return contents
-    .split('\n')
-    .filter((line) => line.trim())
-    .map((line, index) => {
-      try {
-        return JSON.parse(line);
-      } catch {
-        // A torn line means we lost this record's framing. Say so loudly rather than
-        // dropping it silently — the raw text is still in the file for recovery.
-        console.error(`[spool] unparseable line ${index + 1} in ${file}, skipping`);
-        return null;
-      }
-    })
-    .filter(Boolean);
+  const entries = [];
+  for (const line of contents.split('\n')) {
+    if (!line.trim()) continue;
+
+    try {
+      entries.push(JSON.parse(line));
+    } catch {
+      // A torn line cannot be replayed as an entry, but its bytes must not simply vanish on
+      // the next rewrite. Quarantine the raw text so the submission is still recoverable.
+      console.error(`[spool] unparseable line in ${path.basename(file)}, quarantining to corrupt.jsonl`);
+      await fs.appendFile(CORRUPT_FILE, `${line}\n`);
+    }
+  }
+
+  return entries;
 }
 
 export function readSpool() {
   return readJsonl(SPOOL_FILE);
 }
 
-/** Write-temp-then-rename, so a crash mid-write cannot truncate the spool. */
-export async function rewriteSpool(entries) {
+/** Write to a temp file then rename, so a crash mid-write cannot truncate the spool. */
+async function writeAtomic(file, entries) {
   const body = entries.map((entry) => `${JSON.stringify(entry)}\n`).join('');
-  const temp = `${SPOOL_FILE}.tmp`;
+  const temp = `${file}.tmp`;
+  await fs.writeFile(temp, body);
+  await fs.rename(temp, file);
+}
 
+/**
+ * Applies the outcome of a drain pass.
+ *
+ * `outcomes` maps entry id -> the updated entry to keep (a retry, with a bumped attempt
+ * count), or null to remove it (written to Airtable, or dead-lettered).
+ *
+ * Critically, this RE-READS the spool inside the serialized section and leaves any id it does
+ * not know about untouched. A drain pass takes seconds (network I/O per entry), and a
+ * submission can land in the spool while it runs. Rewriting the file from the drainer's stale
+ * in-memory snapshot would delete that submission -- silent data loss in the exact machinery
+ * built to prevent it.
+ */
+export async function reconcileSpool(outcomes) {
   await serialize(async () => {
-    await fs.writeFile(temp, body);
-    await fs.rename(temp, SPOOL_FILE);
+    const current = await readJsonl(SPOOL_FILE);
+
+    const next = [];
+    for (const entry of current) {
+      if (!outcomes.has(entry.id)) {
+        next.push(entry);   // appended while the drain was running; leave it alone
+        continue;
+      }
+      const updated = outcomes.get(entry.id);
+      if (updated) next.push(updated);   // still needs retrying
+    }
+
+    await writeAtomic(SPOOL_FILE, next);
   });
 }
 
