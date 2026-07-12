@@ -8,6 +8,13 @@ const REQUIRED_PROD_ENV = [
   'VITE_AUTH0_DOMAIN',
   'VITE_AUTH0_CLIENT_ID',
   'VITE_RECAPTCHA_SITE_KEY',
+]
+
+// Only needed when the acknowledgement email is switched on, which it is by default.
+// Turning it off (VITE_EMAIL_ACK_ENABLED=false) is what lets you deploy without EmailJS
+// credentials; leaving it on without them is a build error rather than a silent no-op,
+// because an applicant who is never emailed has no way of knowing.
+const REQUIRED_FOR_EMAIL_ACK = [
   'VITE_EMAILJS_SERVICE_ID',
   'VITE_EMAILJS_TEMPLATE_ID',
   'VITE_EMAILJS_PUBLIC_KEY',
@@ -17,12 +24,22 @@ const REQUIRED_PROD_ENV = [
 export default defineConfig(({ command, mode }) => {
   if (command === 'build') {
     const env = loadEnv(mode, process.cwd(), '')
-    const missing = REQUIRED_PROD_ENV.filter((key) => !env[key])
+
+    const required = env.VITE_EMAIL_ACK_ENABLED === 'false'
+      ? REQUIRED_PROD_ENV
+      : [...REQUIRED_PROD_ENV, ...REQUIRED_FOR_EMAIL_ACK]
+
+    const missing = required.filter((key) => !env[key])
     if (missing.length > 0) {
+      const emailOnly = missing.every((key) => REQUIRED_FOR_EMAIL_ACK.includes(key))
+
       throw new Error(
         'Production build is missing required environment variables:\n' +
         missing.map((key) => `  - ${key}`).join('\n') +
-        '\n\nSee .env.example. In CI these come from GitHub repository variables.'
+        '\n\nSee .env.example.' +
+        (emailOnly
+          ? '\nTo deploy without the acknowledgement email, set VITE_EMAIL_ACK_ENABLED=false.'
+          : '')
       )
     }
   }

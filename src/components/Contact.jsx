@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { BRAND } from '../data';
 import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
 import emailjs from '@emailjs/browser';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL, EMAIL_ACK_ENABLED, EMAILJS } from '../config';
 import './Contact.css';
 
 export default function Contact() {
@@ -51,22 +51,27 @@ export default function Contact() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // 2. Send Email via EmailJS
-        try {
-          await emailjs.send(
-            import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID',
-            import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID',
-            {
-              user_name: formData.name,
-              user_email: formData.email,
-              college: formData.college,
-              phone: formData.phone,
-              message: formData.message,
-            },
-            import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY'
-          );
-        } catch (emailError) {
-          console.error("EmailJS sending failed (but DB save succeeded):", emailError);
+        // 2. Acknowledgement email. Best-effort and deliberately non-fatal: the application is
+        //    already saved, so failing the whole submission over an email would be worse than
+        //    not sending it. Gated by VITE_EMAIL_ACK_ENABLED so the app can be deployed before
+        //    EmailJS is set up.
+        if (EMAIL_ACK_ENABLED) {
+          try {
+            await emailjs.send(
+              EMAILJS.serviceId,
+              EMAILJS.templateId,
+              {
+                user_name: formData.name,
+                user_email: formData.email,
+                college: formData.college,
+                phone: formData.phone,
+                message: formData.message,
+              },
+              EMAILJS.publicKey
+            );
+          } catch (emailError) {
+            console.error('Acknowledgement email failed. The application WAS saved.', emailError);
+          }
         }
 
         setStatusType('success');
