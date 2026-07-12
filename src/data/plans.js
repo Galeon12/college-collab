@@ -26,7 +26,7 @@ export const CURRICULUM_PLANS = {
         tag: 'Build & Design',
         items: [
           { title: 'Full-stack Web Development', bullets: ['Git Essentials', 'Frontend', 'Backend', 'Cloud', 'Docker Containerization'] },
-          { title: 'Industry-level Project Development', bullets: ['Built and shipped end-to-end on the MERN Stack'] },
+          { title: 'Capstone Project Development', bullets: ['Build and ship an end-to-end Capstone project on the MERN Stack'] },
           { title: 'System Design', bullets: ['HLD', 'LLD', 'SOLID Principles'] },
           { title: 'CS Fundamentals', bullets: ['OOPS', 'DBMS', 'Computer Networks'] }
         ],
@@ -87,7 +87,7 @@ export const CURRICULUM_PLANS = {
         tag: 'Build & Design',
         items: [
           { title: 'Full-stack Web Development', bullets: ['Git Essentials', 'Frontend', 'Backend', 'Cloud', 'Docker Containerization'] },
-          { title: 'Industry-level Project Development', bullets: ['Built and shipped end-to-end on the MERN Stack'] },
+          { title: 'Capstone Project Development', bullets: ['Build and ship an end-to-end Capstone project on the MERN Stack'] },
           { title: 'System Design', bullets: ['HLD', 'LLD', 'SOLID Principles'] },
           { title: 'CS Fundamentals', bullets: ['OOPS', 'DBMS', 'Computer Networks'] }
         ],
@@ -145,7 +145,7 @@ export const CURRICULUM_PLANS = {
         tag: 'Build & Design',
         items: [
           { title: 'Full-stack Web Development', bullets: ['Git Essentials', 'Frontend', 'Backend', 'Cloud', 'Docker Containerization'] },
-          { title: 'Industry-level Project Development', bullets: ['Built and shipped end-to-end on the MERN Stack'] },
+          { title: 'Capstone Project Development', bullets: ['Build and ship an end-to-end Capstone project on the MERN Stack'] },
           { title: 'System Design', bullets: ['HLD', 'LLD', 'SOLID Principles'] },
           { title: 'CS Fundamentals', bullets: ['OOPS', 'DBMS', 'Computer Networks'] }
         ],
