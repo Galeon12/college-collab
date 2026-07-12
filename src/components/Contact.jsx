@@ -209,7 +209,7 @@ export default function Contact() {
         <div className="contact__footer">
 
           <div className="contact__copyright">
-            © {new Date().getFullYear()} AlgoUniversity. All rights reserved. Backed by Y Combinator (W21).
+            © {new Date().getFullYear()} AlgoUniversity. All rights reserved. Backed by Y Combinator (S21).
           </div>
         </div>
       </div>

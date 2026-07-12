@@ -27,7 +27,7 @@ export default function Hero() {
       <div className="container hero__inner">
         <div className="hero__content">
           <div className="hero__badge">
-            Backed by Y Combinator (W21)
+            Backed by Y Combinator (S21)
           </div>
 
           <h1 className="hero__title">
