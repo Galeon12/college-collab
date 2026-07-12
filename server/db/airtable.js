@@ -1,158 +1,156 @@
 import Airtable from 'airtable';
-import dotenv from 'dotenv';
-dotenv.config();
+import { config } from '../env.js';
+import { withRetry } from './retry.js';
 
-// Initialize Airtable base
-const base = new Airtable({ apiKey: process.env.AIRTABLE_PAT }).base(process.env.AIRTABLE_BASE_ID);
+const base = new Airtable({
+  apiKey: process.env.AIRTABLE_PAT,
+  // The SDK defaults to 300s. That is not a timeout, it's a hang.
+  requestTimeout: config.AIRTABLE_TIMEOUT_MS,
+  // The SDK retries 429 with no attempt ceiling, backing off toward 10 minutes. We do our
+  // own bounded retry in ./retry.js -- leaving this off would hang requests indefinitely.
+  noRetryIfRateLimited: true,
+}).base(process.env.AIRTABLE_BASE_ID);
 
 const USERS_TABLE = process.env.AIRTABLE_TABLE_USERS || 'Users';
 const APPS_TABLE = process.env.AIRTABLE_TABLE_APPLICATIONS || 'Applications';
 
 /**
- * Escapes single quotes to prevent formula injection when querying by email.
+ * Airtable matches field names literally and case-sensitively -- a mismatch is a 422, which we
+ * classify as permanent and dead-letter. The literals written below are the contract with the
+ * base; renaming a column in the Airtable UI without changing them here breaks writes.
+ *
+ * Watch the casing: the Users table uses `isWhatsapp` with a LOWERCASE 'a'.
+ */
+
+/**
+ * Escapes a value interpolated into a filterByFormula string literal.
+ *
+ * Backslashes must be escaped FIRST. Escaping quotes first would turn an input backslash into
+ * the escape character for the quote we just added, letting the value break out of the literal.
  */
 function escapeFormulaValue(value) {
-  return value.replace(/'/g, "\\'");
+  return value.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
+
+/** Airtable record -> the `{ _id, ...fields }` shape the routes expect (a Mongoose leftover). */
+function toRecord(record) {
+  return { _id: record.id, ...record.fields };
+}
+
+/** Both tables key on a field named `email`. */
+async function findByEmail(table, email) {
+  const safeEmail = escapeFormulaValue(email.toLowerCase());
+  const records = await withRetry(
+    () => base(table).select({
+      filterByFormula: `{email} = '${safeEmail}'`,
+      maxRecords: 1,
+    }).firstPage(),
+    { label: `findByEmail(${table})` },
+  );
+
+  return records.length === 0 ? null : records[0];
 }
 
 // ==========================================
-// USERS CRUD
+// USERS
 // ==========================================
 
+/**
+ * Never returns the password hash -- the Airtable record carries it, and spreading the raw
+ * fields is how it would end up on the wire. Login reads it via findUserCredentialsByEmail.
+ */
 export const findUserByEmail = async (email) => {
-  const safeEmail = escapeFormulaValue(email.toLowerCase());
-  try {
-    const records = await base(USERS_TABLE).select({
-      filterByFormula: `{email} = '${safeEmail}'`,
-      maxRecords: 1
-    }).firstPage();
+  const record = await findByEmail(USERS_TABLE, email);
+  if (!record) return null;
 
-    if (records.length === 0) return null;
-    
-    // Format to match Mongoose schema structure for seamless integration
-    return {
-      _id: records[0].id,
-      ...records[0].fields
-    };
-  } catch (error) {
-    console.error('Airtable findUserByEmail error:', error);
-    throw error;
-  }
+  const { password: _password, ...safeFields } = record.fields;
+  return { _id: record.id, ...safeFields };
 };
 
-export const findUserById = async (id) => {
-  try {
-    const record = await base(USERS_TABLE).find(id);
-    if (!record) return null;
-    
-    return {
-      _id: record.id,
-      ...record.fields
-    };
-  } catch (error) {
-    if (error.statusCode === 404) return null;
-    console.error('Airtable findUserById error:', error);
-    throw error;
-  }
+/**
+ * The only way to get the password hash -- and it hands it back under an explicit
+ * `passwordHash` key rather than smuggling it inside the spread fields, so no caller
+ * can leak it by accident. Used solely by POST /api/auth/login.
+ */
+export const findUserCredentialsByEmail = async (email) => {
+  const record = await findByEmail(USERS_TABLE, email);
+  if (!record) return null;
+
+  const { password: passwordHash, ...safeFields } = record.fields;
+  return { _id: record.id, ...safeFields, passwordHash };
 };
 
 export const createUser = async (userData) => {
-  try {
-    // Note: Airtable fields must match the schema exactly.
-    const records = await base(USERS_TABLE).create([
-      {
-        fields: {
-          fullName: userData.fullName,
-          email: userData.email.toLowerCase(),
-          phone: userData.phone,
-          isWhatsapp: userData.isWhatsapp || false,
-          institution: userData.institution,
-          designation: userData.designation,
-          password: userData.password
-        }
-      }
-    ]);
-    
-    return {
-      _id: records[0].id,
-      ...records[0].fields
-    };
-  } catch (error) {
-    console.error('Airtable createUser error:', error);
-    throw error;
-  }
+  const records = await withRetry(
+    () => base(USERS_TABLE).create([{
+      fields: {
+        fullName: userData.fullName,
+        email: userData.email.toLowerCase(),
+        phone: userData.phone,
+        isWhatsapp: userData.isWhatsapp || false,   // lowercase 'a' -- see airtable-schema.md
+        institution: userData.institution,
+        designation: userData.designation,
+        password: userData.password,
+      },
+    }]),
+    { label: 'createUser' },
+  );
+
+  const { password: _password, ...safeFields } = records[0].fields;
+  return { _id: records[0].id, ...safeFields };
 };
 
 // ==========================================
-// APPLICATIONS CRUD
+// APPLICATIONS
 // ==========================================
 
 export const findApplicationByEmail = async (email) => {
-  const safeEmail = escapeFormulaValue(email.toLowerCase());
-  try {
-    const records = await base(APPS_TABLE).select({
-      filterByFormula: `{email} = '${safeEmail}'`,
-      maxRecords: 1
-    }).firstPage();
-
-    if (records.length === 0) return null;
-    
-    return {
-      _id: records[0].id,
-      ...records[0].fields
-    };
-  } catch (error) {
-    console.error('Airtable findApplicationByEmail error:', error);
-    throw error;
-  }
+  const record = await findByEmail(APPS_TABLE, email);
+  return record ? toRecord(record) : null;
 };
 
 export const createApplication = async (appData) => {
-  try {
-    const records = await base(APPS_TABLE).create([
-      {
-        fields: {
-          name: appData.name,
-          college: appData.college,
-          email: appData.email.toLowerCase(),
-          phone: appData.phone || '',
-          message: appData.message || ''
-        }
-      }
-    ]);
-    
-    return {
-      _id: records[0].id,
-      ...records[0].fields
-    };
-  } catch (error) {
-    console.error('Airtable createApplication error:', error);
-    throw error;
-  }
+  const records = await withRetry(
+    () => base(APPS_TABLE).create([{
+      fields: {
+        name: appData.name,
+        college: appData.college,
+        email: appData.email.toLowerCase(),
+        phone: appData.phone || '',
+        message: appData.message || '',
+      },
+    }]),
+    { label: 'createApplication' },
+  );
+
+  return toRecord(records[0]);
 };
 
+/**
+ * Sorted newest-first in JS, NOT via Airtable's `sort` option. The original implementation
+ * sorted on a literal field named 'Created time', which throws UNKNOWN_FIELD_NAME on any base
+ * that lacks that exact column. `createdTime` is returned by Airtable on every record and
+ * needs no column at all. Do not reintroduce the sort.
+ */
 export const getAllApplications = async () => {
-  try {
-    const records = await base(APPS_TABLE).select({
-      sort: [{ field: 'Created time', direction: 'desc' }] // Ensure your Airtable table has this field natively
-    }).all();
-    
-    return records.map(record => ({
-      _id: record.id,
-      ...record.fields,
-      createdAt: record._rawJson.createdTime // Airtable always returns createdTime in raw JSON
-    }));
-  } catch (error) {
-    console.error('Airtable getAllApplications error:', error);
-    throw error;
-  }
+  const records = await withRetry(
+    () => base(APPS_TABLE).select().all(),
+    { label: 'getAllApplications' },
+  );
+
+  return records
+    .map((record) => ({
+      ...toRecord(record),
+      createdAt: record._rawJson.createdTime,
+    }))
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 };
 
 export default {
   findUserByEmail,
-  findUserById,
+  findUserCredentialsByEmail,
   createUser,
   findApplicationByEmail,
   createApplication,
-  getAllApplications
+  getAllApplications,
 };

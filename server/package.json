@@ -4,9 +4,13 @@
   "description": "Backend server for college_collab applications",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "node --test \"test/*.test.js\""
   },
   "dependencies": {
     "airtable": "^0.12.2",
@@ -14,9 +18,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
-    "jwks-rsa": "^4.1.0",
-    "mongoose": "^8.4.1"
+    "jwks-rsa": "^4.1.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.2"
