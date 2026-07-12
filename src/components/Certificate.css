@@ -100,20 +100,19 @@
   position: relative;
   z-index: 1;
   border-radius: var(--radius-lg);
-  box-shadow:
-    0 10px 40px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(220, 38, 38, 0.1);
-  background: var(--white);
-  padding: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  background: transparent;
+  padding: 0;
   animation: floatImage 6s ease-in-out infinite;
   transform-style: preserve-3d;
+  overflow: hidden;
 }
 
 .certificate__img {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   object-fit: cover;
 }
 
