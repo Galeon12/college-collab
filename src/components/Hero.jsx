@@ -41,9 +41,15 @@ export default function Hero() {
           </p>
 
           <div className="hero__actions">
-            <button className="hero__btn-primary" onClick={() => scrollTo('pricing')}>
+            <a 
+              href="https://drive.google.com/file/d/1LBQBgreWSqSAKbFqpSkG2B6ttLitPUSP/view?usp=sharing" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="hero__btn-primary" 
+              style={{ textDecoration: 'none' }}
+            >
               <FiDownload /> Download Brochure
-            </button>
+            </a>
             <button className="hero__btn-secondary" onClick={() => scrollTo('contact')}>
               Connect Now <FiArrowRight />
             </button>

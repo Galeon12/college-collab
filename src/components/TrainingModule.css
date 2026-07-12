@@ -281,7 +281,7 @@
   padding-bottom: 12px;
   margin-top: -12px; /* Pull back up to negate padding top visually */
   scrollbar-width: none;
-  align-items: stretch;
+  align-items: flex-start;
 }
 
 .tm-phase__items::-webkit-scrollbar {
