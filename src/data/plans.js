@@ -5,8 +5,8 @@ export const CURRICULUM_PLANS = {
   pinnacle: {
     key: 'pinnacle',
     label: 'Pinnacle',
-    tagline: '1st - 3rd Year Students',
-    meta: 'B.Tech 1st, 2nd & 3rd year · 120 hrs across the semester · 3-4 classes a week',
+    tagline: '2nd & 3rd Year Students',
+    meta: 'B.Tech 2nd & 3rd year · 120 hrs across the semester · 3-4 classes a week',
     description: 'Build the problem-solving instinct early - before the placement season arrives.',
     phases: [
       {

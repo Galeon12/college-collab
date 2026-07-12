@@ -3,7 +3,7 @@ export const BRAND = {
   tagline: "Backed by Y Combinator (S21)",
   email: "rachna@algouniversity.com",
   phone: "+91 76750 17659",
-  address: "3rd Floor, IIT Patna Incubator, Bihta, Patna, Bihar 801103",
+  address: "2nd floor, CIE IIIT-Hyderabad,Vindhiya C4, IIIT-H campus Gachibowli, Hyderabad,Telangana 500031",
 };
 
 export const YC_COMPANIES = [

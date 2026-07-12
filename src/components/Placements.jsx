@@ -1,12 +1,10 @@
-import { PLACEMENT_STATS, ALUMNI, HIRING_PARTNERS, COMPANY_LOGOS } from '../data';
+import { useState } from 'react';
+import { PLACEMENT_STATS, HIRING_PARTNERS, COMPANY_LOGOS, ALUMNI_SPOTLIGHT_VIDEOS } from '../data';
+import { FiPlay } from 'react-icons/fi';
 import './Placements.css';
 
-// Only top 4 alumni shown
-const TOP_ALUMNI = ALUMNI.slice(0, 4);
-// Duplicate for marquee
-const marqueePartners = [...HIRING_PARTNERS, ...HIRING_PARTNERS];
-
 export default function Placements() {
+  const [activeVideoId, setActiveVideoId] = useState(null);
   return (
     <section className="placements" id="placements">
       <div className="container">
@@ -43,20 +41,33 @@ export default function Placements() {
 
         {/* Top 4 grid - no slider */}
         <div className="placements__alumni-grid">
-          {TOP_ALUMNI.map((alum, i) => (
-            <div key={i} className="placements__alumni-card">
-              <div className="placements__alumni-img-wrap">
-                <img
-                  src={alum.image}
-                  alt={alum.name}
-                  className="placements__alumni-photo"
+          {ALUMNI_SPOTLIGHT_VIDEOS.map((t, i) => (
+            <div 
+              key={i} 
+              className="spotlight-card"
+              onClick={() => setActiveVideoId(t.videoId)}
+            >
+              <div className="spotlight-card__media">
+                <img 
+                  src={t.image} 
+                  alt={t.name}
+                  className="spotlight-card__thumb"
                 />
+                <div className="spotlight-card__overlay"></div>
+                
+                <div className="spotlight-card__play-btn">
+                  <FiPlay className="spotlight-card__play-icon" />
+                </div>
               </div>
-              <div className="placements__alumni-details">
-                <div className="placements__alumni-name">{alum.name}</div>
-                <div className="placements__alumni-role">{alum.role} at</div>
-                <div className="placements__alumni-company">{alum.company}</div>
-                <div className="placements__alumni-package-text">CTC: {alum.package}</div>
+
+              <div className="spotlight-card__info">
+                <h3 className="spotlight-card__name">{t.name}</h3>
+                <div className="spotlight-card__role">
+                  {t.company} • {t.role}
+                </div>
+                <div className="spotlight-card__stipend">
+                  {t.stipend}
+                </div>
               </div>
             </div>
           ))}
@@ -67,7 +78,7 @@ export default function Placements() {
             150+ Hiring Partners Including
           </div>
           <div className="placements__marquee">
-            {marqueePartners.map((partner, i) => (
+            {[...HIRING_PARTNERS, ...HIRING_PARTNERS].map((partner, i) => (
               <div key={i} className="placements__partner-logo-wrap">
                 <img
                   src={COMPANY_LOGOS[partner]}
@@ -79,6 +90,25 @@ export default function Placements() {
           </div>
         </div>
       </div>
+
+      {/* Video Modal Overlay */}
+      {activeVideoId && (
+        <div className="video-modal" onClick={() => setActiveVideoId(null)}>
+          <div className="video-modal__content" onClick={(e) => e.stopPropagation()}>
+            <button className="video-modal__close" onClick={() => setActiveVideoId(null)}>&times;</button>
+            <div className="video-modal__ratio-box">
+              <iframe
+                src={`https://www.youtube.com/embed/${activeVideoId}?autoplay=1`}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="video-modal__iframe"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

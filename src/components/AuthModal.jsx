@@ -196,7 +196,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup' }) {
         <button className="auth-modal-close" onClick={onClose}>&times;</button>
         
         {mode === 'googleSignup' ? (
-          <div className="auth-modal-form">
+          <div className="auth-modal-form" key="googleSignup">
             <h2>Almost Done!</h2>
             <p>Please complete your profile to finish signing up.</p>
 
@@ -235,7 +235,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup' }) {
             </form>
           </div>
         ) : mode === 'signup' ? (
-          <div className="auth-modal-form">
+          <div className="auth-modal-form" key="signup">
             <h2>Create Account</h2>
             <p>Already have an account? <span className="auth-link" onClick={() => {setMode('login'); setError(null);}}>Login</span></p>
             
@@ -319,7 +319,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup' }) {
             </form>
           </div>
         ) : (
-          <div className="auth-modal-form">
+          <div className="auth-modal-form" key="login">
             <h2>Log in</h2>
             <p>New user ? <span className="auth-link" onClick={() => {setMode('signup'); setError(null);}}>Register Now</span></p>
             

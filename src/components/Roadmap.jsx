@@ -6,42 +6,63 @@ import './Roadmap.css';
 const ROADMAP_STEPS = [
   {
     id: 1,
-    title: '1. Fundamentals - DSA & CP',
+    title: '1. Onboarding',
+    desc: 'Orientation, platform setup, and initial assessments.',
+    icon: '👋',
+    color: '#3b82f6',
+  },
+  {
+    id: 2,
+    title: '2. Fundamentals - DSA & CP',
     desc: 'Data Structures, Algorithms, Competitive Programming, dsa.',
     icon: '🧠',
     color: '#ef4444',
   },
   {
-    id: 2,
-    title: '2. Weekly Problem Bunch',
+    id: 3,
+    title: '3. Weekly Problem Bunch',
     desc: 'A problem bunch after every class followed by doubt sessions to concrete your concepts.',
     icon: '💻',
     color: '#6366f1',
   },
   {
-    id: 3,
-    title: '3. Coding Round Simulations',
+    id: 4,
+    title: '4. Coding Round Simulations',
     desc: 'Coding-round simulations every 2 weeks that mirror the coding rounds of top-tech companies.',
     icon: '⚙️',
     color: '#f97316',
   },
   {
-    id: 4,
-    title: '4. Full Stack Development & System Design',
+    id: 5,
+    title: '5. Full Stack Development & System Design',
     desc: 'Build industry-level capstone project',
     icon: '📚',
     color: '#22c55e',
   },
   {
-    id: 5,
-    title: '5. Interview Mastery',
+    id: 6,
+    title: '6. CS Fundamentals',
+    desc: 'Operating Systems, DBMS, Computer Networks, and Object-Oriented Programming.',
+    icon: '🖥️',
+    color: '#10b981',
+  },
+  {
+    id: 7,
+    title: '7. Interview Mastery',
     desc: 'Mock interviews with FAANG engineers, company specific PYQs, resume reviews.',
     icon: '🚀',
     color: '#8b5cf6',
   },
   {
-    id: 6,
-    title: '6. Get A SDE Role',
+    id: 8,
+    title: '8. Placements',
+    desc: 'Dedicated placement assistance, resume building, and profile optimization.',
+    icon: '💼',
+    color: '#ec4899',
+  },
+  {
+    id: 9,
+    title: '9. Get A SDE Role',
     desc: 'Live hiring drives, direct referrals, offer negotiation.',
     icon: '🏆',
     color: '#06b6d4',
@@ -50,7 +71,7 @@ const ROADMAP_STEPS = [
 
 // The 5 steps sit at evenly‑spaced X positions across a 1000‑wide viewBox.
 // Odd steps (1,3,5) sit on the TOP row (y=120), even steps (2,4) on the BOTTOM row (y=380).
-const VW = 1280;
+const VW = 1880;
 const TOP_Y = 200;
 const BOT_Y = 400;
 
@@ -140,12 +161,12 @@ export default function Roadmap() {
           >
             <defs>
               <linearGradient id="pathGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%"   stopColor="#6366f1" />
-                <stop offset="16%"  stopColor="#ef4444" />
-                <stop offset="33%"  stopColor="#f97316" />
-                <stop offset="50%"  stopColor="#eab308" />
-                <stop offset="66%"  stopColor="#22c55e" />
-                <stop offset="83%"  stopColor="#06b6d4" />
+                <stop offset="0%" stopColor="#6366f1" />
+                <stop offset="16%" stopColor="#ef4444" />
+                <stop offset="33%" stopColor="#f97316" />
+                <stop offset="50%" stopColor="#eab308" />
+                <stop offset="66%" stopColor="#22c55e" />
+                <stop offset="83%" stopColor="#06b6d4" />
                 <stop offset="100%" stopColor="#8b5cf6" />
               </linearGradient>
               <filter id="glow">

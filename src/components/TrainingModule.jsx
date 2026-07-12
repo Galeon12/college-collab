@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { FiChevronDown } from 'react-icons/fi';
 import { CURRICULUM_PLANS, PLAN_KEYS } from '../data';
 import './TrainingModule.css';
 
@@ -14,15 +15,23 @@ function TopicCard({ item }) {
       >
         <span>{item.title}</span>
         {item.dropdownList && (
-          <span style={{ 
+          <div style={{ 
+            backgroundColor: '#ffffff', 
+            border: '1px solid var(--grey-300)',
+            borderRadius: '50%', 
+            width: '22px', 
+            height: '22px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
             transform: expanded ? 'rotate(180deg)' : 'none', 
-            transition: 'transform 0.2s', 
-            fontSize: '12px',
-            color: 'var(--crimson)',
-            marginTop: '2px'
+            transition: 'transform 0.3s ease',
+            marginTop: '2px',
+            flexShrink: 0,
+            boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
           }}>
-            ▼
-          </span>
+            <FiChevronDown color="#000000" size={14} />
+          </div>
         )}
       </div>
       {item.bullets ? (
@@ -34,14 +43,14 @@ function TopicCard({ item }) {
       )}
       
       {item.dropdownList && expanded && (
-        <div className="tm-topic-card__dropdown" style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--grey-200)', animation: 'fadeIn 0.2s ease-out' }}>
-          <ul style={{ listStyleType: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'var(--grey-700)', display: 'grid', gridTemplateColumns: '1fr', gap: '6px' }}>
+        <div className="tm-topic-card__dropdown" style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--grey-200)', animation: 'fadeIn 0.2s ease-out' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
             {item.dropdownList.map((topic, i) => (
-              <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: 'var(--crimson)' }}>•</span> {topic}
-              </li>
+              <div key={i} className="tm-topic-tag">
+                {topic}
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
     </div>

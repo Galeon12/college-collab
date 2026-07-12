@@ -75,6 +75,7 @@
 .roadmap__card {
   position: absolute;
   width: 220px;
+  height: 220px;
   transform: translateX(-50%);
   background: var(--white);
   border-radius: var(--radius-lg);

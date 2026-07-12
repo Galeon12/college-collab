@@ -262,3 +262,223 @@
     scroll-snap-align: center;
   }
 }
+
+/* Spotlight video card custom layout inside placements */
+.placements__alumni-grid .spotlight-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 9 / 16;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  background-color: var(--grey-900);
+}
+
+.placements__alumni-grid .spotlight-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.2);
+}
+
+.placements__alumni-grid .spotlight-card__media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.placements__alumni-grid .spotlight-card__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.placements__alumni-grid .spotlight-card:hover .spotlight-card__thumb {
+  transform: scale(1.06);
+}
+
+.placements__alumni-grid .spotlight-card__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to top,
+    rgba(15, 23, 42, 0.95) 0%,
+    rgba(15, 23, 42, 0.5) 45%,
+    rgba(15, 23, 42, 0.1) 100%
+  );
+  z-index: 2;
+  transition: background 0.3s ease;
+}
+
+.placements__alumni-grid .spotlight-card:hover .spotlight-card__overlay {
+  background: linear-gradient(
+    to top,
+    rgba(15, 23, 42, 0.98) 0%,
+    rgba(15, 23, 42, 0.6) 45%,
+    rgba(15, 23, 42, 0.2) 100%
+  );
+}
+
+.placements__alumni-grid .spotlight-card__play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 54px;
+  height: 54px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, box-shadow 0.3s;
+}
+
+.placements__alumni-grid .spotlight-card__play-icon {
+  font-size: 20px;
+  color: #4f46e5;
+  fill: #4f46e5;
+  margin-left: 3px;
+}
+
+.placements__alumni-grid .spotlight-card:hover .spotlight-card__play-btn {
+  transform: translate(-50%, -50%) scale(1.15);
+  background-color: #ffffff;
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+}
+
+.placements__alumni-grid .spotlight-card__info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.placements__alumni-grid .spotlight-card__name {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  font-family: var(--font-heading);
+}
+
+.placements__alumni-grid .spotlight-card__role {
+  color: #94a3b8;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.placements__alumni-grid .spotlight-card__stipend {
+  color: #fbbf24;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+/* Video Modal Overlay for Placements */
+.video-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.video-modal__content {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  background-color: #0f172a;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: modalScaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.video-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 32px;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+  z-index: 1010;
+}
+
+.video-modal__close:hover {
+  color: #ffffff;
+}
+
+.video-modal__ratio-box {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+}
+
+.video-modal__iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalScaleUp {
+  from { transform: scale(0.9) translateY(20px); }
+  to { transform: scale(1) translateY(0); }
+}
+
+@media (max-width: 1024px) {
+  .placements__alumni-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .placements__alumni-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    gap: var(--space-md) !important;
+    padding-bottom: var(--space-md) !important;
+  }
+  
+  .placements__alumni-grid .spotlight-card {
+    min-width: 75vw !important;
+    scroll-snap-align: center !important;
+  }
+}

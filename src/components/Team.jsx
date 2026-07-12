@@ -19,18 +19,37 @@ export default function Team() {
         </div>
 
         <div className="team__grid">
-          {TEAM.slice(0, 4).map((member, i) => (
-            <div key={i} className="team__card">
-              <img
-                src={member.image}
-                alt={member.name}
-                className="team__avatar"
-              />
-              <div className="team__name">{member.name}</div>
-              <div className="team__role">{member.role}</div>
-              <div className="team__credential">{member.credential}</div>
-              <div className="team__education">{member.education}</div>
-              <span className="team__expertise-badge">{member.expertise}</span>
+          {TEAM.map((member, i) => (
+            <div key={i} className="mentor-card">
+              <div className="mentor-card__image-container">
+                <img
+                  src={member.image}
+                  alt={member.name}
+                  className="mentor-card__image"
+                />
+                <div className="mentor-card__image-overlay"></div>
+                {member.linkedin && (
+                  <a href={member.linkedin} target="_blank" rel="noreferrer" className="mentor-card__linkedin">
+                    in
+                  </a>
+                )}
+                <div className="mentor-card__info-overlay">
+                  <h3 className="mentor-card__name">{member.name}</h3>
+                  <span className="mentor-card__role-badge">{member.roleBadge}</span>
+                </div>
+              </div>
+              <div className="mentor-card__bottom">
+                <div className="mentor-card__college">
+                  <span className="mentor-card__college-icon">🎓</span> {member.college}
+                </div>
+                <div className="mentor-card__companies">
+                  {member.companies.map((company, idx) => (
+                    <span key={idx} className={`company-logo company-${company.toLowerCase().replace(/[^a-z0-9]/g, '')}`}>
+                      {company}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           ))}
         </div>

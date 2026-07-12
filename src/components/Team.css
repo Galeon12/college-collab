@@ -1,7 +1,7 @@
 /* ─── Team Section ─── */
 .team {
   padding: var(--space-4xl) 0;
-  background: var(--grey-50);
+  background: #f8fafc; /* A very light grayish blue */
 }
 
 .team__header {
@@ -17,100 +17,167 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--space-lg);
+  gap: 24px;
 }
 
-.team__card {
+/* Mentor Card Container */
+.mentor-card {
   background: var(--white);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-  text-align: center;
-  border: 1px solid var(--grey-200);
-  transition: all var(--duration-normal) var(--ease-out);
-  position: relative;
+  border-radius: 12px;
   overflow: hidden;
-  width: calc(25% - var(--space-lg));
-  min-width: 240px;
+  border: 1px solid var(--grey-200);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  width: calc(25% - 24px);
+  min-width: 260px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.team__card::before {
-  content: '';
+.mentor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Image Container (Top half) */
+.mentor-card__image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background-color: #e2e8f0;
+}
+
+.mentor-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Gradient Overlay for Text Visibility */
+.mentor-card__image-overlay {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--crimson), var(--crimson-light));
-  opacity: 0;
-  transition: opacity var(--duration-normal);
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 30%, transparent 100%);
+  pointer-events: none;
 }
 
-.team__card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--crimson-200);
-}
-
-.team__card:hover::before {
-  opacity: 1;
-}
-
-.team__avatar {
-  width: 80px;
-  height: 80px;
+/* LinkedIn Icon Overlay */
+.mentor-card__linkedin {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #0077b5;
   border-radius: 50%;
-  object-fit: cover;
-  margin: 0 auto var(--space-md);
-  border: 3px solid var(--crimson-200);
-  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: background-color 0.2s;
+  z-index: 2;
 }
 
-.team__name {
-  font-family: var(--font-heading);
+.mentor-card__linkedin:hover {
+  background-color: #ffffff;
+}
+
+/* Info Overlay (Name and Role) */
+.mentor-card__info-overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.mentor-card__name {
+  color: #ffffff;
   font-size: 18px;
   font-weight: 700;
-  color: var(--grey-900);
-  margin-bottom: 4px;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  font-family: var(--font-heading);
 }
 
-.team__role {
+.mentor-card__role-badge {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+/* Bottom Container */
+.mentor-card__bottom {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: #ffffff;
+  flex-grow: 1;
+}
+
+/* College Section */
+.mentor-card__college {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mentor-card__college-icon {
   font-size: 14px;
-  font-weight: 600;
-  color: var(--crimson);
-  margin-bottom: var(--space-md);
 }
 
-.team__credential {
-  font-size: 13px;
-  color: var(--grey-600);
-  margin-bottom: 4px;
+/* Companies Section */
+.mentor-card__companies {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-.team__education {
-  font-size: 13px;
-  color: var(--grey-500);
-  margin-bottom: var(--space-sm);
+.company-logo {
+  font-weight: 700;
+  font-size: 15px;
 }
 
-.team__expertise-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  background: var(--crimson-50);
-  color: var(--crimson);
-  border-radius: var(--radius-full);
-  font-size: 12px;
-  font-weight: 600;
-  margin-top: var(--space-sm);
-}
+.company-alphagrep { color: #1e3a8a; }
+.company-directi { color: #000000; font-family: 'Arial Black', sans-serif; font-style: italic; font-weight: 900; }
+.company-google { color: #ea4335; }
+.company-apple { color: #000000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+.company-microsoft { color: #737373; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+.company-indeed { color: #2563eb; font-weight: 800; }
+.company-plivo { color: #000000; font-weight: 800; }
+.company-algouniversity { color: #dc2626; }
 
 @media (max-width: 1100px) {
-  .team__card {
-    width: calc(50% - var(--space-lg));
+  .mentor-card {
+    width: calc(50% - 24px);
   }
 }
 
 @media (max-width: 600px) {
-  .team__card {
+  .mentor-card {
     width: 100%;
     max-width: 350px;
   }

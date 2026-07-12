@@ -19,3 +19,38 @@ export const ALUMNI = [
 export const HIRING_PARTNERS = [
   "Google", "Microsoft", "Amazon", "Salesforce", "Uber", "Walmart", "Oracle", "Twilio", "Flipkart", "Swiggy"
 ];
+
+export const ALUMNI_SPOTLIGHT_VIDEOS = [
+  {
+    name: "Aamod Jain",
+    company: "Google",
+    role: "SDE Intern",
+    stipend: "Stipend: ₹2,14,000 / month",
+    videoId: "6PW2ipjZmlo",
+    image: "/spotlight/aamod.png",
+  },
+  {
+    name: "Aiza Siddiqui",
+    company: "Sprinklr",
+    role: "SDE Intern",
+    stipend: "Stipend: ₹2,00,000 / month",
+    videoId: "ojEH8ylL40E",
+    image: "/spotlight/aiza.png",
+  },
+  {
+    name: "Akshat Gupta",
+    company: "Microsoft",
+    role: "Software Engineer",
+    stipend: "Stipend: ₹1,75,000 / month",
+    videoId: "37Jw1KjuXjI",
+    image: "/spotlight/akshat.png",
+  },
+  {
+    name: "Darshan Arkhade",
+    company: "Google",
+    role: "Software Engineer",
+    stipend: "Salary: ₹52,00,000 per year",
+    videoId: "ThsfYLpa-h8",
+    image: "/spotlight/darshan.png",
+  },
+];
