@@ -1,0 +1,99 @@
+# nginx vhost for college-collab. TEMPLATE -- run `make nginx-print` to render it with this
+# checkout's real path and port, then install it:
+#
+#   make nginx-print > /tmp/college-collab.conf
+#   sudo cp /tmp/college-collab.conf /etc/nginx/sites-available/college-collab
+#   sudo cp deploy/nginx/college-collab-headers.conf /etc/nginx/snippets/
+#   sudo ln -s /etc/nginx/sites-available/college-collab /etc/nginx/sites-enabled/
+#   sudo nginx -t && sudo systemctl reload nginx
+#   sudo certbot --nginx -d __SERVER_NAME__      # adds the ssl_* lines to this file
+#
+# The Makefile deliberately does NOT touch nginx: this is a shared VM serving other sites, and
+# a bad reload takes them all down.
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name __SERVER_NAME__;
+
+    # certbot --nginx writes ssl_certificate / ssl_certificate_key here.
+
+    # The built frontend. Vite sets no `base`, so every asset URL in dist/index.html is
+    # ABSOLUTE (/assets/...). This app must be served from the domain root -- mount it under a
+    # subpath and every asset 404s, giving a blank page with no obvious cause.
+    root __REPO__/dist;
+    index index.html;
+
+    # ---- the SPA shell ------------------------------------------------------------------
+    # index.html must NEVER be cached. It names the content-hashed asset files, so a stale copy
+    # points at /assets/*.js filenames that no longer exist after a deploy. The symptom is a
+    # blank white page for RETURNING visitors only -- i.e. "it works for me".
+    location = /index.html {
+        include snippets/college-collab-headers.conf;
+        add_header Cache-Control "no-cache" always;
+    }
+
+    # ---- hashed build assets ------------------------------------------------------------
+    # `try_files $uri =404` IS the old navigationFallback.exclude rule, and it matters:
+    # a MISSING asset must 404, not fall through to index.html. Falling through returns HTML
+    # with a 200 and Content-Type text/html for a .js request; the browser refuses to execute
+    # it, and a broken deploy presents as a mystery blank page instead of an obvious 404.
+    location /assets/ {
+        include snippets/college-collab-headers.conf;
+        add_header Cache-Control "public, max-age=31536000, immutable" always;
+        try_files $uri =404;
+    }
+
+    # Same rule for static files sitting at the root of dist/ (favicon, images, etc).
+    location ~* \.(?:css|js|mjs|map|png|jpe?g|gif|svg|ico|webp|txt|json|woff2?)$ {
+        include snippets/college-collab-headers.conf;
+        try_files $uri =404;
+    }
+
+    # ---- the API -------------------------------------------------------------------------
+    location /api/ {
+        # NO trailing slash, and no path after the port. This form passes /api/applications
+        # through UNCHANGED. Writing `http://127.0.0.1:__PORT__/` instead strips the /api prefix
+        # and every route 404s.
+        # Diagnostic: if GET /api/health returns 404 instead of 403, you have the slash.
+        proxy_pass http://127.0.0.1:__PORT__;
+
+        proxy_http_version 1.1;
+        proxy_set_header Connection        "";
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+
+        # Express runs with `trust proxy: 1` in production, so it reads the client IP from this
+        # header. WITHOUT this line every request appears to come from 127.0.0.1 and
+        # express-rate-limit buckets THE ENTIRE INTERNET into one counter: the login limit of 10
+        # failures per 15 minutes becomes 10 for all users combined, and the first bot to trip
+        # it locks out every real applicant.
+        #
+        # Overwrite with $remote_addr rather than appending $proxy_add_x_forwarded_for: nginx is
+        # the only proxy in front of Node, so any inbound value is attacker-supplied junk.
+        # (If you ever put Cloudflare or a load balancer in front, this AND `trust proxy` must
+        # both change.)
+        proxy_set_header X-Forwarded-For   $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Express caps JSON bodies at 32kb; reject anything larger at the edge.
+        client_max_body_size 64k;
+
+        # No security headers here: /api returns JSON and carries helmet's own headers.
+    }
+
+    # ---- SPA fallback --------------------------------------------------------------------
+    # Anything else is a client-side route -> serve the shell. (The old navigationFallback.)
+    location / {
+        include snippets/college-collab-headers.conf;
+        add_header Cache-Control "no-cache" always;
+        try_files $uri $uri/ /index.html;
+    }
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name __SERVER_NAME__;
+    return 301 https://$host$request_uri;
+}

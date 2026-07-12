@@ -11,12 +11,17 @@ import { config, IS_PRODUCTION } from '../env.js';
  * drainer (./drain.js) keeps trying. Entries that can never succeed go to dead-letter.jsonl
  * for a human.
  *
- * Why a plain file and not a queue: on Azure App Service Linux, /home is a persistent Azure
- * Files mount that survives process restart, container recycle and redeploy. That makes a file
- * genuinely durable here with zero new infrastructure.
+ * Why a plain file and not a queue: it lives on the VM's own disk at /var/lib/college-collab,
+ * OUTSIDE the git worktree, so it survives process restarts, redeploys, and re-cloning the repo.
+ * That is genuinely durable here with zero new infrastructure. It must never be moved inside the
+ * checkout: gitignored-and-inside-the-repo is the most deletable state on the box, and one
+ * `git clean -xdf` would erase the only copy of every submission Airtable rejected.
  *
- * LIMIT: the single-writer chain below assumes ONE process on ONE instance. Scale App Service
- * past a single instance and this breaks; you would need a real queue instead.
+ * LIMIT: the single-writer chain below assumes ONE process. Run pm2 in cluster mode, or with
+ * instances > 1, and two processes interleave partial lines into the JSONL while reconcileSpool
+ * rewrites the file from one process's view of it -- DELETING the other's entries. Silent loss
+ * of applicant submissions, inside the machinery built to prevent exactly that. ecosystem.config.cjs
+ * pins fork mode with a single instance; do not change it without replacing this with a real queue.
  */
 
 const SPOOL_FILE = path.join(config.SPOOL_DIR, 'failed-writes.jsonl');
