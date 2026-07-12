@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { FiChevronDown } from 'react-icons/fi';
+import { FiChevronDown, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { CURRICULUM_PLANS, PLAN_KEYS } from '../data';
 import './TrainingModule.css';
 
@@ -91,14 +91,14 @@ function PhaseCard({ phase, index, isVisible, isLast }) {
               onClick={() => scrollBy(-300)}
               aria-label="Previous cards"
             >
-              &#8249;
+              <FiChevronLeft size={18} />
             </button>
             <button
               className="tm-phase__nav-btn"
               onClick={() => scrollBy(300)}
               aria-label="Next cards"
             >
-              &#8250;
+              <FiChevronRight size={18} />
             </button>
           </div>
         )}

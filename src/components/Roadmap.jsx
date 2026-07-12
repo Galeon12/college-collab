@@ -13,8 +13,8 @@ const ROADMAP_STEPS = [
   },
   {
     id: 2,
-    title: '2. Fundamentals - DSA & CP',
-    desc: 'Data Structures, Algorithms, Competitive Programming, dsa.',
+    title: '2. Fundamentals - CP',
+    desc: 'Data Structures, Algorithms, Competitive Programming.',
     icon: '🧠',
     color: '#ef4444',
   },
@@ -35,7 +35,7 @@ const ROADMAP_STEPS = [
   {
     id: 5,
     title: '5. Full Stack Development & System Design',
-    desc: 'Build industry-level capstone project',
+    desc: 'Build industry-level capstone project, Low-Level Design (LLD) & High-Level Design (HLD)',
     icon: '📚',
     color: '#22c55e',
   },
@@ -63,7 +63,7 @@ const ROADMAP_STEPS = [
   {
     id: 9,
     title: '9. Get A SDE Role',
-    desc: 'Live hiring drives, direct referrals, offer negotiation.',
+    desc: '',
     icon: '🏆',
     color: '#06b6d4',
   },
