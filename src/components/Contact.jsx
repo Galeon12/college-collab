@@ -4,6 +4,8 @@ import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
 import emailjs from '@emailjs/browser';
 import './Contact.css';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
@@ -37,7 +39,7 @@ export default function Contact() {
 
     try {
       // 1. Save to MongoDB via Backend API
-      const response = await fetch('http://localhost:5000/api/applications', {
+      const response = await fetch(`${API_BASE_URL}/api/applications`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

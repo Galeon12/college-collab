@@ -4,6 +4,8 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { useAuth0 } from '@auth0/auth0-react';
 import './AuthModal.css';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export default function AuthModal({ isOpen, onClose, initialMode = 'signup' }) {
   const [mode, setMode] = useState(initialMode); // 'signup' | 'login' | 'googleSignup'
   const [loading, setLoading] = useState(false);
@@ -92,7 +94,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup' }) {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/google', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -134,7 +136,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup' }) {
 
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/auth/signup', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, captchaToken })
@@ -164,7 +166,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup' }) {
     setLoading(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email, password: formData.password })
