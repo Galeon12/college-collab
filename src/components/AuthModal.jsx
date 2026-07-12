@@ -297,6 +297,15 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signup' }) {
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={RECAPTCHA_SITE_KEY}
+                  onExpired={() => {
+                    setError('reCAPTCHA verification expired. Please check the checkbox again.');
+                    if (recaptchaRef.current) {
+                      recaptchaRef.current.reset();
+                    }
+                  }}
+                  onErrored={() => {
+                    setError('reCAPTCHA failed to load. Please check your internet connection or ad blocker.');
+                  }}
                 />
               </div>
 
