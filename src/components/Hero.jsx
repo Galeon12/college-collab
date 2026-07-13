@@ -12,12 +12,13 @@ export default function Hero() {
       {/* Video Background */}
       <video
         className="hero__video-bg"
-        src="https://algouniversityresult.netlify.app/hero/hero.mp4"
+        src="/videos/hero.mp4"
         poster="/auht_1.jpg"
         autoPlay
         muted
         loop
         playsInline
+        preload="metadata"
       />
       {/* Clean dark overlay - no red tint */}
       <div className="hero__overlay" />
@@ -41,11 +42,10 @@ export default function Hero() {
           </p>
 
           <div className="hero__actions">
-            <a 
-              href="https://drive.google.com/file/d/1LBQBgreWSqSAKbFqpSkG2B6ttLitPUSP/view?usp=sharing" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="hero__btn-primary" 
+            <a
+              href="/Campus-Training-Programme-Brochure.pdf"
+              download
+              className="hero__btn-primary"
               style={{ textDecoration: 'none' }}
             >
               <FiDownload /> Download Brochure

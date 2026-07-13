@@ -44,8 +44,18 @@ server {
         try_files $uri =404;
     }
 
-    # Same rule for static files sitting at the root of dist/ (favicon, images, etc).
-    location ~* \.(?:css|js|mjs|map|png|jpe?g|gif|svg|ico|webp|txt|json|woff2?)$ {
+    # Same rule for static files sitting at the root of dist/ (favicon, images, the hero video,
+    # the brochure PDF).
+    #
+    # mp4 and pdf MUST be in this list. Without them they fall through to `location /` below,
+    # which sets Cache-Control: no-cache -- and the hero video is ~10MB, so every visitor would
+    # re-download it on every single page view.
+    #
+    # These filenames are NOT content-hashed (they come from public/ verbatim), so no explicit
+    # Cache-Control is set here: nginx's ETag/Last-Modified let the browser revalidate and get a
+    # 304 instead of the bytes. That caches the video without ever serving a stale one after the
+    # file is replaced.
+    location ~* \.(?:css|js|mjs|map|png|jpe?g|gif|svg|ico|webp|txt|json|woff2?|mp4|webm|pdf)$ {
         include snippets/college-collab-headers.conf;
         try_files $uri =404;
     }

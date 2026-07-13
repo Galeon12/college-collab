@@ -147,6 +147,24 @@ else
   ok "all required VITE_* build vars are set"
 fi
 
+# --------------------------------------------------------------------------- media
+# These are gitignored and placed by hand, so `git pull` will not bring them and a fresh clone
+# will not have them. The build copies public/ into dist/, so a missing file here ships a broken
+# page -- QUIETLY, in the video's case: the <video> 404s but its poster image still renders, so
+# the hero looks almost right and nobody notices. Fail the deploy instead.
+MEDIA_MISSING=()
+for f in "public/videos/hero.mp4" "public/Campus-Training-Programme-Brochure.pdf"; do
+  [ -s "$REPO/$f" ] || MEDIA_MISSING+=("$f")
+done
+if [ ${#MEDIA_MISSING[@]} -gt 0 ]; then
+  fail "missing media (gitignored, must be placed by hand): ${MEDIA_MISSING[*]}"
+  note "copy them into public/ on this machine. Sources are in local/ref/."
+  note "a missing hero video fails SILENTLY -- the poster image still shows -- so this check"
+  note "is the only thing standing between you and a brochure link that 404s in production."
+else
+  ok "media present (hero video, brochure)"
+fi
+
 # --------------------------------------------------------------------------- the origin cross-check
 # The highest-value check in this script. Browsers send Origin on every non-GET request, and
 # every call this frontend makes is a POST -- so same-origin does NOT bypass CORS. If these two
