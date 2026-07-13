@@ -238,7 +238,7 @@ export default function Roadmap() {
                 <h3 className="roadmap__card-title">{step.title}</h3>
                 {step.id === 9 && (
                   <div style={{ fontSize: '3rem', marginTop: '10px', textAlign: 'center', animation: 'bounce 2s infinite' }}>
-                    🏆🎉
+                    🏆
                   </div>
                 )}
                 <p className="roadmap__card-desc">{step.desc}</p>

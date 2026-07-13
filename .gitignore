@@ -20,6 +20,17 @@ local/
 # deliberately OUTSIDE this checkout -- see server/db/spool.js.
 server/.data/
 
+# Large media, kept out of git. These must be placed into public/ BY HAND on each machine
+# (and on the VM) -- `git pull` will not bring them, and the build copies public/ into dist/.
+#
+# If they are missing the failure is quiet: the hero video 404s but its poster image still
+# renders, so the page looks almost right. `make preflight` therefore checks for them and
+# fails the deploy, rather than letting a broken brochure link ship.
+#
+# Source of truth: local/ref/ (also untracked).
+public/videos/
+public/Campus-Training-Programme-Brochure.pdf
+
 
 # Editor directories and files
 .vscode/*
