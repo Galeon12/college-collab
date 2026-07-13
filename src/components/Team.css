@@ -14,10 +14,18 @@
 }
 
 .team__grid {
+  /* wrapper */
+}
+
+.team__track {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 24px;
+}
+
+.mentor-card--duplicate {
+  display: none;
 }
 
 /* Mentor Card Container */
@@ -177,10 +185,46 @@
 }
 
 @media (max-width: 600px) {
-  .mentor-card {
-    width: 100%;
-    max-width: 350px;
+  .team {
+    padding-bottom: var(--space-2xl); /* less padding bottom since no wrap */
   }
+
+  .team__grid {
+    overflow: hidden;
+    position: relative;
+    width: 100vw; /* bleed out of container */
+    margin-left: calc(-50vw + 50%);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  }
+  
+  .team__track {
+    flex-wrap: nowrap;
+    width: max-content;
+    gap: 16px;
+    animation: marquee 16s linear infinite;
+    justify-content: flex-start;
+    padding: 12px 0; /* padding for box-shadow */
+  }
+  
+  .team__track:hover {
+    animation-play-state: paused;
+  }
+  
+  .mentor-card {
+    width: 260px;
+    max-width: none;
+    flex-shrink: 0;
+  }
+  
+  .mentor-card--duplicate {
+    display: flex;
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 8px)); }
 }
 
 /* ── Quirky elements positioning ── */

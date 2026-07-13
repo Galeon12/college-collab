@@ -317,12 +317,21 @@
     padding: var(--space-3xl) 0;
   }
   
+  .kf-row__content {
+    gap: 16px;
+  }
+  
+  .kf-row__description {
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  
   .kf-row__highlights {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 16px;
     width: 100%;
     max-width: 100%;
-    margin: 0 0 var(--space-sm);
+    margin: 0 0 24px;
   }
 
   .kf-row__highlight {

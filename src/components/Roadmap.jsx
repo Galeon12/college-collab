@@ -102,19 +102,32 @@ export default function Roadmap() {
   useEffect(() => {
     const path = pathRef.current;
     if (!path) return;
-    const len = path.getTotalLength();
-    path.style.strokeDasharray = len;
-    path.style.strokeDashoffset = len;
+    
+    let len = 0;
+    try {
+      if (path.getTotalLength) {
+        len = path.getTotalLength();
+      }
+    } catch (e) {
+      // Ignored for hidden SVGs on mobile
+    }
+    
+    if (len > 0) {
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          path.style.transition = 'stroke-dashoffset 2.4s cubic-bezier(0.4,0,0.2,1)';
-          path.style.strokeDashoffset = '0';
+          if (len > 0) {
+            path.style.transition = 'stroke-dashoffset 2.4s cubic-bezier(0.4,0,0.2,1)';
+            path.style.strokeDashoffset = '0';
+          }
           observer.disconnect();
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.05 }
     );
     observer.observe(sectionRef.current);
     return () => observer.disconnect();

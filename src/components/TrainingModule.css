@@ -25,6 +25,22 @@
   justify-content: flex-start;
 }
 
+@media (max-width: 768px) {
+  .tm-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 8px;
+  }
+  .tm-pills::-webkit-scrollbar {
+    display: none;
+  }
+  .tm-pill {
+    flex-shrink: 0;
+  }
+}
+
 
 
 .tm-pill {
