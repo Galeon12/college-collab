@@ -13,14 +13,11 @@ dist-ssr
 *.local
 .env
 
-# Lockfiles are not tracked. Note this means `npm ci` will not work on a fresh
-# clone (it requires a lockfile) -- use `npm install`.
-package-lock.json
-
 # Internal working directory: notes, scratch scripts. Not part of the build.
 local/
 
-# Durable write spool (dev). In production this lives at /home/data.
+# Durable write spool (dev only). In production it lives at /var/lib/college-collab/spool,
+# deliberately OUTSIDE this checkout -- see server/db/spool.js.
 server/.data/
 
 

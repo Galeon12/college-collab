@@ -11,7 +11,7 @@ import { readSpool, reconcileSpool, appendToDeadLetter } from './spool.js';
  */
 
 const DRAIN_INTERVAL_MS = 60_000;
-const MAX_ATTEMPTS = 10;   // then it needs a human -- see runbooks/spool-recovery.md
+const MAX_ATTEMPTS = 10;   // then it is dead-lettered and needs a human -- run `make spool`
 
 // The driver is injected rather than imported so this module doesn't reach around and pick a
 // storage backend of its own, and so tests can drain against a fake.

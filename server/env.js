@@ -55,11 +55,19 @@ export const config = Object.freeze({
   // the tests inject a transient failure.
   AIRTABLE_TIMEOUT_MS: parseIntEnv('AIRTABLE_TIMEOUT_MS', 10_000, { min: 1, max: 120_000 }),
 
-  // Where failed writes are parked until they land in Airtable. /home is a persistent Azure
-  // Files mount on App Service Linux; /home/site/wwwroot may be read-only under run-from-package,
-  // but /home/data is always writable and survives restarts.
+  // Where failed writes are parked until they land in Airtable.
+  //
+  // Deliberately OUTSIDE the git worktree. When Airtable is down this file is the only copy of
+  // an applicant's submission, and anything inside the checkout is one `git clean -xdf` away
+  // from deletion. /var/lib is the FHS location for state that must survive restarts, redeploys
+  // and re-cloning the repo.
+  //
+  // `make setup` creates it and chowns it to the service user; the app can write it but cannot
+  // create it. db/spool.js refuses to boot in production if it is missing or unwritable, which
+  // is the correct loud failure -- a spool the app can conjure for itself is a spool in the
+  // wrong place.
   SPOOL_DIR: process.env.SPOOL_DIR
-    || (IS_PRODUCTION ? '/home/data/college-collab' : path.join(SERVER_DIR, '.data')),
+    || (IS_PRODUCTION ? '/var/lib/college-collab/spool' : path.join(SERVER_DIR, '.data')),
 });
 
 if (errors.length > 0) {

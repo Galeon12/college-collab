@@ -16,10 +16,19 @@ import jwt from 'jsonwebtoken';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Azure App Service terminates TLS and forwards the client IP in X-Forwarded-For. Without
-// this, every request looks like it came from the proxy and the rate limiters below would
-// bucket the whole internet together. Only in production: trusting the header when we are NOT
-// behind a proxy would let any caller spoof their IP and walk straight past the limiter.
+// Loopback by default: nginx is the ONLY thing that may reach this process.
+//
+// This matters more than it looks. `trust proxy` below tells Express to believe the
+// X-Forwarded-For header. If the port were also reachable directly -- and this is a shared VM
+// running other services -- anyone could hit Node straight, set that header to whatever they
+// liked, and walk past every rate limiter as a different "client" each request. Binding to
+// loopback is what makes trusting the header safe.
+const HOST = process.env.HOST || '127.0.0.1';
+
+// nginx terminates TLS and forwards the client IP in X-Forwarded-For. Without this, every
+// request looks like it came from nginx and the rate limiters below would bucket the whole
+// internet into one counter. Only in production: trusting the header when we are NOT behind a
+// proxy would let any caller spoof their IP.
 if (IS_PRODUCTION) app.set('trust proxy', 1);
 
 const limiterDefaults = {
@@ -37,8 +46,12 @@ const limiterDefaults = {
  *    locks real users out for 15 minutes for a failure that was entirely ours.
  * What is left is 4xx: wrong password, unknown account. Exactly the brute-force signal.
  *
- * LIMIT: the store is in-memory, so counters are per-instance and reset on restart. That is
- * consistent with the rest of this server's single-instance assumption; a second instance
+ * LIMIT: the store is in-memory, so counters are per-process and reset on restart. This is one
+ * of the three things that make this server single-instance ONLY -- see ecosystem.config.cjs,
+ * which pins pm2 to fork mode with one instance. Under N processes every limit here is silently
+ * N times higher than it reads, with no error to tell you.
+ *
+ * That is consistent with the rest of this server's single-instance assumption; a second instance
  * would need a shared store.
  */
 const loginLimiter = rateLimit({
@@ -70,7 +83,12 @@ const apiLimiter = rateLimit({
  * constraint to fall back on. Holding the email for the duration of the window closes the
  * realistic race: a double-clicked submit button, or two tabs.
  *
- * LIMIT: in-process only. It reduces duplicates, it does not eliminate them, and it stops
+ * LIMIT: in-process only, and one of the three reasons this server is single-instance ONLY
+ * (see ecosystem.config.cjs). Under N processes this Set guards nothing across them, and the
+ * result is DUPLICATE Airtable rows -- silently, because Airtable has no unique constraint to
+ * reject them.
+ *
+ * It reduces duplicates, it does not eliminate them, and it stops
  * working across more than one server instance. That is the honest ceiling of running
  * without a real database.
  */
@@ -114,8 +132,9 @@ app.use(cors({
 app.use(express.json({ limit: '32kb' }));
 app.use('/api', apiLimiter);
 
-// Unauthenticated liveness check. Azure's health probe uses this; it deliberately reveals
-// nothing about the spool (see /api/health for that, which is admin-gated).
+// Unauthenticated liveness check, reachable only from the box itself: nginx serves the built
+// frontend at `/` and never proxies it here. This is what `make smoke` curls on loopback. It
+// deliberately reveals nothing about the spool -- /api/health does that, and is admin-gated.
 app.get('/', (req, res) => {
   res.send('AlgoUniversity Campus Training Programme API is running...');
 });
@@ -474,13 +493,17 @@ app.use((err, req, res, next) => {
 // exits. Accepting submissions with no safety net is how you lose the one you meant to save.
 await initSpool();
 
-const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running on port ${PORT}`);
+const server = app.listen(PORT, HOST, () => {
+  console.log(`Server is running on ${HOST}:${PORT}`);
   startDrainer(storage);
 });
 
-// Azure sends SIGTERM on restart, scale, and redeploy. Finish in-flight requests rather than
-// dropping them mid-write, but do not hang forever if a connection refuses to close.
+// pm2 sends SIGINT on reload/restart (systemd and Docker send SIGTERM), so handle both. Finish
+// in-flight requests rather than dropping them mid-Airtable-write, but do not hang forever if a
+// connection refuses to close.
+//
+// The 10s below is why ecosystem.config.cjs sets kill_timeout: 11000. pm2's default is 1600ms,
+// which would SIGKILL us 8.4s before this path gives up -- making the graceful shutdown fiction.
 for (const signal of ['SIGTERM', 'SIGINT']) {
   process.on(signal, () => {
     console.log(`${signal} received, shutting down`);
