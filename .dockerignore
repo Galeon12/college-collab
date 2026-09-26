@@ -1,0 +1,8 @@
+# Keep secrets and bulk out of the build context.
+**/node_modules
+dist
+.git
+.github
+server/.env
+.env
+**/*.log

@@ -1,0 +1,164 @@
+# college-collab on AKS. NOT APPLIED -- see the blockers at the bottom.
+#
+# ONE POD, TWO CONTAINERS, and that is forced rather than chosen:
+# server/index.js:26 binds `process.env.HOST || '127.0.0.1'`. Containers in the
+# same pod share a network namespace, so nginx reaches the API on loopback
+# exactly as it did on the VM. Split them into two Deployments and you must set
+# HOST=0.0.0.0, which puts the admin-key endpoints on the pod network with only
+# the API's own auth in front of them. Leaving the default is the safer shape and
+# needs no code change.
+#
+# replicas: 1 and strategy Recreate, and this is NOT a scaling oversight --
+# ecosystem.config.cjs documents three mechanisms that assume exactly one
+# process and NONE of which errors when broken: the write spool serialises
+# through one in-process promise chain (two writers silently lose applicant
+# submissions), `inFlightEmails` is an in-process Set closing a check-then-create
+# race (duplicate Airtable rows, which have no unique constraint to catch them),
+# and express-rate-limit's in-memory store makes every limit N times higher than
+# it reads. RollingUpdate would briefly run two pods and hit all three.
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: college-collab-spool
+  namespace: algouni
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+  # storageClassName is deliberately LEFT UNSET so the cluster default applies
+  # and this file cannot silently pick the wrong one.
+  #
+  # BEFORE APPLYING, CHECK THE RECLAIM POLICY. Every `disk.csi.azure.com` class
+  # on this cluster was measured as `reclaimPolicy: Delete`, which means deleting
+  # this PVC destroys the spool -- and the spool is the durable record of
+  # applicant submissions that failed to reach Airtable. That is the one piece of
+  # state in this app that cannot be rebuilt from anywhere else.
+  #   kubectl get storageclass -o custom-columns=NAME:.metadata.name,RECLAIM:.reclaimPolicy
+  # Use a Retain class, or accept the risk explicitly and write it down.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: college-collab
+  namespace: algouni
+  labels: { app: college-collab }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector:
+    matchLabels: { app: college-collab }
+  template:
+    metadata:
+      labels: { app: college-collab }
+    spec:
+      nodeSelector: { kubernetes.io/arch: arm64 }
+      # > 10s: server/index.js gives itself 10 seconds to drain in-flight
+      # requests before force-exiting, so a shorter grace period SIGKILLs it
+      # mid-Airtable-write and makes that graceful path a fiction. The VM's pm2
+      # config sets kill_timeout to 11s for the same reason.
+      terminationGracePeriodSeconds: 20
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 1000          # so the mounted PVC is writable by the api uid
+        seccompProfile: { type: RuntimeDefault }
+      volumes:
+        - name: spool
+          persistentVolumeClaim: { claimName: college-collab-spool }
+        - name: nginx-conf
+          configMap: { name: college-collab-nginx }
+        - name: nginx-tmp
+          emptyDir: {}
+      containers:
+        - name: api
+          image: algouniversityregistry.azurecr.io/algouni/college-collab-api:REPLACE_ME
+          # HOST is NOT set: the default 127.0.0.1 keeps the API reachable only
+          # from the nginx container beside it. See the header.
+          env:
+            - { name: NODE_ENV, value: production }
+            - { name: PORT, value: "5000" }
+            - { name: SPOOL_DIR, value: /var/lib/college-collab/spool }
+          # All seven required values come from a Secret the USER creates from
+          # the VM's server/.env -- JWT_SECRET, RECAPTCHA_SECRET, ADMIN_API_KEY,
+          # AUTH0_DOMAIN, AIRTABLE_PAT, AIRTABLE_BASE_ID, ALLOWED_ORIGINS.
+          # env.js exits 1 naming every missing one, so a wrong Secret is a
+          # CrashLoopBackOff with a readable reason rather than a silent
+          # half-configured server.
+          envFrom:
+            - secretRef: { name: college-collab-secrets }
+          volumeMounts:
+            - { name: spool, mountPath: /var/lib/college-collab/spool }
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits:   { cpu: 500m, memory: 512Mi }
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities: { drop: ["ALL"] }
+        - name: web
+          image: algouniversityregistry.azurecr.io/algouni/college-collab-web:REPLACE_ME
+          ports: [{ containerPort: 8080, name: http }]
+          volumeMounts:
+            - { name: nginx-conf, mountPath: /etc/nginx/conf.d }
+            - { name: nginx-tmp, mountPath: /var/cache/nginx }
+          resources:
+            requests: { cpu: 20m, memory: 32Mi }
+            limits:   { cpu: 200m, memory: 128Mi }
+          securityContext:
+            runAsUser: 10001
+            allowPrivilegeEscalation: false
+            capabilities: { drop: ["ALL"] }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: college-collab
+  namespace: algouni
+spec:
+  selector: { app: college-collab }
+  ports:
+    - { name: http, port: 80, targetPort: 8080 }
+---
+# The Ingress needs its own HOSTNAME, not a path on an existing one: the Vite
+# build emits ABSOLUTE asset URLs (/assets/...), so the app only works at a
+# domain root. deploy/nginx/college-collab.conf.template:22 says so too.
+#
+# DNS is the USER'S to change and has NO ROLLBACK -- the current target
+# 104.211.94.253 is the deallocated VM. Gate BEFORE the flip:
+#   curl --resolve <host>:443:<ingress-ip> https://<host>/   asserting real content
+# then lower the TTL, then flip, then watch the Certificate go Ready.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: college-collab
+  namespace: algouni
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [REPLACE_ME.algouniversity.com]
+      secretName: college-collab-tls
+  rules:
+    - host: REPLACE_ME.algouniversity.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: { service: { name: college-collab, port: { number: 80 } } }
+---
+# BLOCKERS, all of them needing the VM started (which is the user's step):
+#
+#  1. SEVEN RUNTIME SECRETS for the Secret above, from the VM's server/.env.
+#  2. SEVEN BUILD-TIME VALUES for the web image, from the VM's root .env --
+#     VITE_API_URL, VITE_AUTH0_DOMAIN, VITE_AUTH0_CLIENT_ID,
+#     VITE_RECAPTCHA_SITE_KEY and three VITE_EMAILJS_*. vite.config.js REFUSES
+#     to build without them and folds them into the bundle, so the web image is
+#     environment-specific and CANNOT BE BUILT AHEAD OF TIME. Setting
+#     VITE_EMAIL_ACK_ENABLED=false drops the three EmailJS ones.
+#     The programme's plan recorded "7 required values"; it is 14.
+#  3. The rendered nginx conf for the `college-collab-nginx` ConfigMap, from
+#     deploy/nginx/college-collab.conf.template with __REPO__ ->
+#     /usr/share/nginx/html and __PORT__ -> 5000, and `listen 8080`.
+#  4. The hostname, and the DNS change to point it at the ingress.
